@@ -1,0 +1,30 @@
+开始批处理
+
+文件: "C:\Users\WJhon\Desktop\dest1\effect-104.png"
+错误:命令"删除"当前不可用。 (-25920)
+
+文件: "C:\Users\WJhon\Desktop\dest1\effect-144.png"
+错误:命令"删除"当前不可用。 (-25920)
+
+文件: "C:\Users\WJhon\Desktop\dest1\effect-25.png"
+错误:命令"删除"当前不可用。 (-25920)
+
+文件: "C:\Users\WJhon\Desktop\dest1\effect-28.png"
+错误:命令"删除"当前不可用。 (-25920)
+
+文件: "C:\Users\WJhon\Desktop\dest1\effect-29.png"
+错误:命令"删除"当前不可用。 (-25920)
+
+文件: "C:\Users\WJhon\Desktop\dest1\effect-54.png"
+错误:命令"删除"当前不可用。 (-25920)
+
+文件: "C:\Users\WJhon\Desktop\dest1\effect-55.png"
+错误:命令"删除"当前不可用。 (-25920)
+
+文件: "C:\Users\WJhon\Desktop\dest1\effect-59.png"
+错误:命令"删除"当前不可用。 (-25920)
+
+文件: "C:\Users\WJhon\Desktop\dest1\test.txt"
+错误:不能完成请求，因为 Photoshop 不能识别该文件扩展名。 (-25600)
+
+结束批处理
