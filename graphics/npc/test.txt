@@ -1,0 +1,33 @@
+开始批处理
+
+文件: "C:\Users\WJhon\Desktop\graph\npc\npc-159.png"
+错误:命令"删除"当前不可用。 (-25920)
+
+文件: "C:\Users\WJhon\Desktop\graph\npc\npc-255.png"
+错误:命令"删除"当前不可用。 (-25920)
+
+文件: "C:\Users\WJhon\Desktop\graph\npc\npc-30.png"
+错误:命令"删除"当前不可用。 (-25920)
+
+文件: "C:\Users\WJhon\Desktop\graph\npc\npc-31.png"
+错误:命令"删除"当前不可用。 (-25920)
+
+文件: "C:\Users\WJhon\Desktop\graph\npc\npc-40.png"
+错误:命令"删除"当前不可用。 (-25920)
+
+文件: "C:\Users\WJhon\Desktop\graph\npc\npc-45.png"
+错误:命令"删除"当前不可用。 (-25920)
+
+文件: "C:\Users\WJhon\Desktop\graph\npc\npc-79.png"
+错误:命令"删除"当前不可用。 (-25920)
+
+文件: "C:\Users\WJhon\Desktop\graph\npc\npc-80.png"
+错误:命令"删除"当前不可用。 (-25920)
+
+文件: "C:\Users\WJhon\Desktop\graph\npc\npc-83.png"
+错误:命令"删除"当前不可用。 (-25920)
+
+文件: "C:\Users\WJhon\Desktop\graph\npc\test.txt"
+错误:不能完成请求，因为 Photoshop 不能识别该文件扩展名。 (-25600)
+
+结束批处理
