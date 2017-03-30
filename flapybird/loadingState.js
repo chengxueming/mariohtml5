@@ -24,11 +24,15 @@ Bird.LoadingState.prototype.Enter = function() {
     this.Images[1].name = "pipe_top";
     this.Images[2].name = "pipe_middle";
     this.Images[3].name = "pipe_bottom";
+    this.Images[4].name = "background";
+    //this.Images[5].name = "background2";
 
     this.Images[0].src = "graphics/npc/npc-176.png";
     this.Images[1].src = "graphics/block/block-294.png";
     this.Images[2].src = "graphics/block/block-295.png";
     this.Images[3].src = "graphics/block/block-296.png";
+    this.Images[4].src = "graphics/background2/background2-34.png";
+    //this.Images[5].src = "graphics/background2/background2-35.png";
     
     Enjine.Resources.AddImages(this.Images);
 };
