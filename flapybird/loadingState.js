@@ -31,19 +31,6 @@ Bird.LoadingState.prototype.Enter = function() {
     this.Images[3].src = "graphics/block/block-296.png";
     
     Enjine.Resources.AddImages(this.Images);
-    
-    var testAudio = new Audio();
-	
-    if (testAudio.canPlayType("audio/mp3")) {
-    	Enjine.Resources.AddSound("1up", "sounds/1-up.mp3", 1)
-		    .AddSound("breakblock", "sounds/breakblock.mp3")
-    } else {
-	    Enjine.Resources.AddSound("1up", "sounds/1-up.wav", 1)
-		    .AddSound("breakblock", "sounds/breakblock.wav")
-    }
-    
-    //load the array of tile behaviors
-    Bird.Tile.LoadBehaviors();
 };
 
 Bird.LoadingState.prototype.Exit = function() {

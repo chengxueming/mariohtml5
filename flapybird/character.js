@@ -5,46 +5,7 @@
 
 Bird.Character = function() {
     //these are static in Notch's code... here it doesn't seem necessary
-    this.Large = false;
-    this.Fire = false;
-    this.Coins = 0;
-    this.Lives = 3;
-    this.LevelString = "none";
-    this.GroundInertia = 0.89;
-    this.AirInertia = 0.89;
-    
-    //non static variables in Notch's code
-    this.RunTime = 0;
-    this.WasOnGround = false;
-    this.OnGround = false;
-    this.MayJump = false;
-    this.Ducking = false;
-    this.Sliding = false;
-    this.JumpTime = 0;
-    this.XJumpSpeed = 0;
-    this.YJumpSpeed = 0;
-    this.CanShoot = false;
-    
-    this.Width = 4;
-    this.Height = 24;
-    
-    //Level scene
-    this.World = null;
-    this.Facing = 0;
-    this.PowerUpTime = 0;
-    
-    this.XDeathPos = 0; this.YDeathPos = 0;
-    this.DeathTime = 0;
-    this.WinTime = 0;
-    this.InvulnerableTime = 0;
-    
-    //Sprite
-    this.Carried = null;
-    
-    this.LastLarge = false;
-    this.LastFire = false;
-    this.NewLarge = false;
-    this.NewFire = false;
+
 };
 
 Bird.Character.prototype = new Bird.NotchSprite(null);
@@ -53,59 +14,7 @@ Bird.Character.prototype.Initialize = function(world) {
     this.World = world;
     this.X = 32;
     this.Y = 0;
-	this.PowerUpTime = 0;
     
-    //non static variables in Notch's code
-    this.RunTime = 0;
-    this.WasOnGround = false;
-    this.OnGround = false;
-    this.MayJump = false;
-    this.Ducking = false;
-    this.Sliding = false;
-    this.JumpTime = 0;
-    this.XJumpSpeed = 0;
-    this.YJumpSpeed = 0;
-    this.CanShoot = false;
-    
-    this.Width = 4;
-    this.Height = 24;
-    
-    //Level scene
-    this.World = world;
-    this.Facing = 0;
-    this.PowerUpTime = 0;
-    
-    this.XDeathPos = 0; this.YDeathPos = 0;
-    this.DeathTime = 0;
-    this.WinTime = 0;
-    this.InvulnerableTime = 0;
-    
-    //Sprite
-    this.Carried = null;
-    
-    this.SetLarge(this.Large, this.Fire);
-};
-
-Bird.Character.prototype.Blink = function(on) {
-    this.Large = on ? this.NewLarge : this.LastLarge;
-    this.Fire = on ? this.NewFire : this.LastFire;
-    
-    if (this.Large) {
-        if (this.Fire) {
-            this.Image = Enjine.Resources.Images["fireMario"];
-        } else {
-            this.Image = Enjine.Resources.Images["Bird"];
-        }
-        
-        this.XPicO = 16;
-        this.YPicO = 31;
-        this.PicWidth = this.PicHeight = 32;
-    } else {
-        this.Image = Enjine.Resources.Images["smallMario"];
-        this.XPicO = 8;
-        this.YPicO = 15;
-        this.PicWidth = this.PicHeight = 16;
-    }
 };
 
 Bird.Character.prototype.Move = function() {
