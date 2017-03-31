@@ -9,18 +9,10 @@ Bird.LevelState = function() {
     this.Camera = null;
     this.width = 320;
     this.height = 240;
-    this.Map = {};
     this.bg = {};
     this.Data = [];
+    this.EnterMap = false;
     this.SpriteTemplates = [];
-    
-    var x = 0, y = 0;
-    for (x = 0; x < this.width; x++) {
-        this.Map[x] = [];
-        for (y = 0; y < this.Height; y++) {
-            this.Map[x][y] = 0;
-        }
-    }
 };
 
 Bird.LevelState.prototype = new Enjine.GameState();
@@ -33,7 +25,7 @@ Bird.LevelState.prototype.Enter = function() {
     this.GotoLoseState = false;
     var i = 0;
     for(i=0;i<2;i++){
-        this.bg[i] = new Bird.Level();
+        this.bg[i] = new Bird.Level(i+1);
         this.bg[i].Initialize();
     }
 
@@ -47,7 +39,16 @@ Bird.LevelState.prototype.Exit = function() {
 Bird.LevelState.prototype.Update = function(delta) {
     this.Camera.X += 4;
     if(this.Camera.X >= this.width){
+        if(this.EnterMap === false){
+            this.EnterMap = true;
+            //    for(i=0;i<2;i++){
+            this.bg[0].GenerateMap();
+                // }
+        }
         this.Camera.X = 0;
+        var type = this.bg[0].type;
+        this.bg[0].type = this.bg[1].type;
+        this.bg[1].type = type;
     }
     //this.Camera.Y += 2;
 };
@@ -55,8 +56,10 @@ Bird.LevelState.prototype.Update = function(delta) {
 Bird.LevelState.prototype.Draw = function(context) {
 
     //绘制背景
-    this.bg[0].Draw(context,this.Camera,1)
-    this.bg[1].Draw(context,this.Camera,2)
+    var i = 0;
+    for(i = 0;i < 2; i++){
+        this.bg[i].Draw(context,this.Camera);
+    }
 };
 
 Bird.LevelState.prototype.CheckForChange = function(context) {
