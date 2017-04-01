@@ -4,7 +4,7 @@
 	Code by Rob Kleffner, 2011
 */
 
-Mario.NotchSprite = function(image) {
+Bird.NotchSprite = function(image) {
     this.XOld = 0; this.YOld = 0;
     this.X = 0; this.Y = 0;
     this.Xa = 0; this.Ya = 0;
@@ -19,9 +19,9 @@ Mario.NotchSprite = function(image) {
     this.Layer = 1;
 };
 
-Mario.NotchSprite.prototype = new Enjine.Drawable();
+Bird.NotchSprite.prototype = new Enjine.Drawable();
 
-Mario.NotchSprite.prototype.Draw = function(context, camera) {
+Bird.NotchSprite.prototype.Draw = function(context, camera) {
     var xPixel = 0, yPixel = 0;
     if (!this.Visible) {
         return;
@@ -38,34 +38,34 @@ Mario.NotchSprite.prototype.Draw = function(context, camera) {
     context.restore();
 };
 
-Mario.NotchSprite.prototype.Update = function(delta) {
+Bird.NotchSprite.prototype.Update = function(delta) {
     this.XOld = this.X;
     this.YOld = this.Y;
     this.Move();
     this.Delta = delta;
 };
 
-Mario.NotchSprite.prototype.UpdateNoMove = function(delta) {
+Bird.NotchSprite.prototype.UpdateNoMove = function(delta) {
     this.XOld = this.X;
     this.YOld = this.Y;
     this.Delta = 0;
 };
 
-Mario.NotchSprite.prototype.Move = function() {
+Bird.NotchSprite.prototype.Move = function() {
     this.X += this.Xa;
     this.Y += this.Ya;
 };
 
-Mario.NotchSprite.prototype.GetX = function(delta) {
+Bird.NotchSprite.prototype.GetX = function(delta) {
     return ((this.XOld + (this.X - this.XOld) * delta) | 0) - this.XPicO;
 };
 
-Mario.NotchSprite.prototype.GetY = function(delta) {
+Bird.NotchSprite.prototype.GetY = function(delta) {
     return ((this.YOld + (this.Y - this.YOld) * delta) | 0) - this.YPicO;
 };
 
-Mario.NotchSprite.prototype.CollideCheck = function() { };
+Bird.NotchSprite.prototype.CollideCheck = function() { };
 
-Mario.NotchSprite.prototype.BumpCheck = function(xTile, yTile) { };
+Bird.NotchSprite.prototype.BumpCheck = function(xTile, yTile) { };
 
-Mario.NotchSprite.prototype.Release = function(mario) { };
+Bird.NotchSprite.prototype.Release = function(Bird) { };
