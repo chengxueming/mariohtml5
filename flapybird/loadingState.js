@@ -33,6 +33,44 @@ Bird.LoadingState.prototype.Enter = function() {
     this.Images[3].src = "graphics/block/block-296.png";
     this.Images[4].src = "graphics/background2/background2-34.png";
     //this.Images[5].src = "graphics/background2/background2-35.png";
+var testAudio = new Audio();
+    
+        if (testAudio.canPlayType("audio/mp3")) {
+        Enjine.Resources.AddSound("1up", "sounds/1-up.mp3", 1)
+            .AddSound("breakblock", "sounds/breakblock.mp3")
+            .AddSound("bump", "sounds/bump.mp3", 4)
+            .AddSound("cannon", "sounds/cannon.mp3")
+            .AddSound("coin", "sounds/coin.mp3", 5)
+            .AddSound("death", "sounds/death.mp3", 1)
+            .AddSound("exit", "sounds/exit.mp3", 1)
+            .AddSound("fireball", "sounds/fireball.mp3", 1)
+            .AddSound("jump", "sounds/jump.mp3")
+            .AddSound("kick", "sounds/kick.mp3")
+            .AddSound("pipe", "sounds/pipe.mp3", 1)
+            .AddSound("powerdown", "sounds/powerdown.mp3", 1)
+            .AddSound("powerup", "sounds/powerup.mp3", 1)
+            .AddSound("sprout", "sounds/sprout.mp3", 1)
+            .AddSound("stagestart", "sounds/stagestart.mp3", 1)
+            .AddSound("stomp", "sounds/stomp.mp3", 2);
+    } else {
+        Enjine.Resources.AddSound("1up", "sounds/1-up.wav", 1)
+            .AddSound("breakblock", "sounds/breakblock.wav")
+            .AddSound("bump", "sounds/bump.wav", 2)
+            .AddSound("cannon", "sounds/cannon.wav")
+            .AddSound("coin", "sounds/coin.wav", 5)
+            .AddSound("death", "sounds/death.wav", 1)
+            .AddSound("exit", "sounds/exit.wav", 1)
+            .AddSound("fireball", "sounds/fireball.wav", 1)
+            .AddSound("jump", "sounds/jump.wav", 1)
+            .AddSound("kick", "sounds/kick.wav", 1)
+            .AddSound("message", "sounds/message.wav", 1)
+            .AddSound("pipe", "sounds/pipe.wav", 1)
+            .AddSound("powerdown", "sounds/powerdown.wav", 1)
+            .AddSound("powerup", "sounds/powerup.wav", 1)
+            .AddSound("sprout", "sounds/sprout.wav", 1)
+            .AddSound("stagestart", "sounds/stagestart.wav", 1)
+            .AddSound("stomp", "sounds/stomp.wav", 1);
+    }
     
     Enjine.Resources.AddImages(this.Images);
 };

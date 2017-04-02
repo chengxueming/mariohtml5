@@ -25,6 +25,27 @@ Bird.Level = function() {
 };
 
 Bird.Level.prototype = {
+	IsBlocking: function(x, y, xa, ya) {
+        var block = this.GetBlock(x, y);
+//        var blocking = ((Mario.Tile.Behaviors[block & 0xff]) & Mario.Tile.BlockAll) > 0;
+  //      blocking |= (ya > 0) && ((Mario.Tile.Behaviors[block & 0xff]) & Mario.Tile.BlockUpper) > 0;
+    //    blocking |= (ya < 0) && ((Mario.Tile.Behaviors[block & 0xff]) & Mario.Tile.BlockLower) > 0;
+    	var blocking = false;
+        return blocking;
+    },
+	GetBlock: function(x, y) {
+        if (x < 0) { x = 0; }
+        if (y < 0) { return 0; }
+        if (x >= this.width) { x = this.width - 1; }
+        if (y >= this.height) { y = this.height - 1; }
+        var Map = [];
+        if(parseInt(x/this.width) == this.curMap){
+        	Map = this.Maps[0];
+        }else{
+        	Map = this.Maps[1];
+        }
+        return Map[x][y];
+    },
 	ClearMap:function(map) {
 	// body...
 		var x = 0, y = 0;
@@ -56,7 +77,6 @@ Bird.Level.prototype = {
 	},
 	Draw:function(context,camera) {
 	// body...
-		//
 		var i1 = parseInt(camera.X/this.Width);
 		var i2 = i1 + 1;
 		if(i1 === this.curMap + 1)
@@ -93,3 +113,4 @@ Bird.Level.prototype = {
 	}
 
 }
+

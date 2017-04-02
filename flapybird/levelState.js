@@ -31,17 +31,21 @@ Bird.LevelState.prototype.Exit = function() {
 
 
 Bird.LevelState.prototype.Update = function(delta) {
-    this.Camera.X = 20;
-    this.Camera.Y = 20;
+    Bird.Character.Update(delta);
+    this.Camera.X = Bird.Character.X - 160;
+        if (this.Camera.X < 0) {
+        this.Camera.X = 0;
+    }
     //this.Camera.Y += 2;
 };
 
 Bird.LevelState.prototype.Draw = function(context) {
 
     //绘制背景
+
     this.Level.Draw(context,this.Camera);
     context.save();
-    context.translate(this.Camera.X, this.Camera.Y);
+    context.translate(-this.Camera.X, -this.Camera.Y);
     Bird.Character.Draw(context, this.Camera);
     context.restore();
 };
