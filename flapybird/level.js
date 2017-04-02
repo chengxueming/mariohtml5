@@ -30,8 +30,8 @@ Bird.Level.prototype = {
 //        var blocking = ((Mario.Tile.Behaviors[block & 0xff]) & Mario.Tile.BlockAll) > 0;
   //      blocking |= (ya > 0) && ((Mario.Tile.Behaviors[block & 0xff]) & Mario.Tile.BlockUpper) > 0;
     //    blocking |= (ya < 0) && ((Mario.Tile.Behaviors[block & 0xff]) & Mario.Tile.BlockLower) > 0;
-    	var blocking = false;
-        return blocking;
+    	//var blocking = false;
+        return block > 0;
     },
 	GetBlock: function(x, y) {
         if (x < 0) { x = 0; }
