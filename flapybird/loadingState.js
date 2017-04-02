@@ -25,13 +25,18 @@ Bird.LoadingState.prototype.Enter = function() {
     this.Images[2].name = "pipe_middle";
     this.Images[3].name = "pipe_bottom";
     this.Images[4].name = "background";
-    //this.Images[5].name = "background2";
+    this.Images[5].name = "smallMario";
+    this.Images[6].name = "mario";
+    this.Images[7].name = "ground";
 
     this.Images[0].src = "graphics/npc/npc-176.png";
     this.Images[1].src = "graphics/block/block-294.png";
     this.Images[2].src = "graphics/block/block-295.png";
     this.Images[3].src = "graphics/block/block-296.png";
     this.Images[4].src = "graphics/background2/background2-34.png";
+    this.Images[5].src = "images/smallmariosheet.png";
+    this.Images[6].src = "images/mariosheet.png";
+    this.Images[7].src = "graphics/block/block-81.png";
     //this.Images[5].src = "graphics/background2/background2-35.png";
 var testAudio = new Audio();
     
@@ -115,7 +120,8 @@ Bird.LoadingState.prototype.Draw = function(context) {
 Bird.LoadingState.prototype.CheckForChange = function(context) {
     if (this.ImagesLoaded) {
 		//set up the global map state variable
-        Bird.Character = new Bird.Character();
+        //Bird.Character = new Bird.Character();
+        Mario.Character = new Mario.Character();
         context.ChangeState(new Bird.LevelState());
     }
 };

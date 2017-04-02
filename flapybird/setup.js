@@ -4,3 +4,4 @@
 */
 
 var Bird = {};
+var Mario = {};

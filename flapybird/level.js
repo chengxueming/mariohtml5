@@ -2,9 +2,9 @@
 Bird.Level = function() {
     //these are static in Notch's code... here it doesn't seem necessary
     this.Width = 320;
-    this.Height = 240;
+    this.Height = 256;
     this.width = 10;
-    this.height = 9;
+    this.height = 8;
 
     this.Block = 32;
     this.BlockWidth = this.Width/this.width;
@@ -13,6 +13,7 @@ Bird.Level = function() {
     this.pipeMiddle =  Enjine.Resources.Images["pipe_middle"];
     this.pipeTop =  Enjine.Resources.Images["pipe_top"];
     this.pipeBottom =  Enjine.Resources.Images["pipe_bottom"];
+    this.ground =  Enjine.Resources.Images["ground"];
     this.interval = 4;
     this.gap = 4;
     this.tail = 0;
@@ -27,6 +28,7 @@ Bird.Level = function() {
 Bird.Level.prototype = {
 	IsBlocking: function(x, y, xa, ya) {
         var block = this.GetBlock(x, y);
+        console.log(block+" "+x+" "+y);
 //        var blocking = ((Mario.Tile.Behaviors[block & 0xff]) & Mario.Tile.BlockAll) > 0;
   //      blocking |= (ya > 0) && ((Mario.Tile.Behaviors[block & 0xff]) & Mario.Tile.BlockUpper) > 0;
     //    blocking |= (ya < 0) && ((Mario.Tile.Behaviors[block & 0xff]) & Mario.Tile.BlockLower) > 0;
@@ -36,15 +38,13 @@ Bird.Level.prototype = {
 	GetBlock: function(x, y) {
         if (x < 0) { x = 0; }
         if (y < 0) { return 0; }
-        if (x >= this.width) { x = this.width - 1; }
-        if (y >= this.height) { y = this.height - 1; }
         var Map = [];
         if(parseInt(x/this.width) == this.curMap){
         	Map = this.Maps[0];
         }else{
         	Map = this.Maps[1];
         }
-        return Map[x][y];
+        return Map[x%this.width][y];
     },
 	ClearMap:function(map) {
 	// body...
@@ -54,15 +54,17 @@ Bird.Level.prototype = {
 	        for (y = 0; y < this.height; y++) {
 	            map[x][y] = 0;
 	        }
+	        map[x][this.height - 1] = 4;
 	    }
 	},
 	GenerateMap:function(map) {
 	// body...
 
 		this.ClearMap(map);
+		bgHeight = this.height - 1;
 	    for (x = this.gap - this.tail -1; x < this.width; x+=this.gap) {
-	   		var top = parseInt(Math.random()*(this.height-this.interval));
-	        for (y = 0; y < this.height; y++) {
+	   		var top = parseInt(Math.random()*(bgHeight-this.interval));
+	        for (y = 0; y < bgHeight; y++) {
 	        	if(y < top){
 	        		map[x][y] = 1;
 	        	}else if(y > top+this.interval){
@@ -92,7 +94,7 @@ Bird.Level.prototype = {
 	    context.drawImage(this.bgImage, 0, 0, picX, 864,
 	    		this.Width - screenX, 0 , screenX, this.Height);
 
-	    var images = {1:this.pipeMiddle,2:this.pipeTop,3:this.pipeBottom};
+	    var images = {1:this.pipeMiddle,2:this.pipeTop,3:this.pipeBottom,4:this.ground};
 	    var x = 0, y = 0;	
     	for (x = 0; x < this.width; x++) {
 	        for (y = 0; y < this.height; y++) {

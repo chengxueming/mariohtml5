@@ -21,7 +21,8 @@ Bird.LevelState.prototype.Enter = function() {
     this.Sprites = new Enjine.DrawableManager();
     this.Camera = new Enjine.Camera();
     this.Level = new Bird.Level();
-    Bird.Character.Initialize(this);
+    //Bird.Character.Initialize(this);
+    Mario.Character.Initialize(this);
     this.GotoLoseState = false;
 };
 
@@ -31,8 +32,9 @@ Bird.LevelState.prototype.Exit = function() {
 
 
 Bird.LevelState.prototype.Update = function(delta) {
-    Bird.Character.Update(delta);
-    this.Camera.X = Bird.Character.X - 160;
+    //Bird.Character.Update(delta);
+    Mario.Character.Update(delta);
+    this.Camera.X = Mario.Character.X - 160;
         if (this.Camera.X < 0) {
         this.Camera.X = 0;
     }
@@ -46,8 +48,10 @@ Bird.LevelState.prototype.Draw = function(context) {
     this.Level.Draw(context,this.Camera);
     context.save();
     context.translate(-this.Camera.X, -this.Camera.Y);
-    Bird.Character.Draw(context, this.Camera);
+    //Bird.Character.Draw(context, this.Camera);
+    Mario.Character.Draw(context, this.Camera);
     context.restore();
+    
 };
 
 Bird.LevelState.prototype.CheckForChange = function(context) {
