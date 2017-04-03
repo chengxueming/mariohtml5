@@ -87,7 +87,11 @@ Bird.Level.prototype = {
 			this.GenerateMap(this.Maps[1]);
 		}
 		this.curMap = i1;
-		var screenX = camera.X%this.Width;
+		var screenX = camera.X;
+		while(screenX > this.Width)
+		{
+			screenX -= this.Width;
+		}
 	    var picX = parseInt(screenX * 1024/this.Width);
 	    context.drawImage(this.bgImage, picX, 0, 1024 - picX, 864,
 	    		0, 0 , this.Width - screenX, this.Height);

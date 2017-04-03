@@ -28,6 +28,10 @@ Bird.LoadingState.prototype.Enter = function() {
     this.Images[5].name = "smallMario";
     this.Images[6].name = "mario";
     this.Images[7].name = "ground";
+    this.Images[8].name = "particles";
+    this.Images[9].name = "enemies";
+    
+    
 
     this.Images[0].src = "graphics/npc/npc-176.png";
     this.Images[1].src = "graphics/block/block-294.png";
@@ -37,6 +41,8 @@ Bird.LoadingState.prototype.Enter = function() {
     this.Images[5].src = "images/smallmariosheet.png";
     this.Images[6].src = "images/mariosheet.png";
     this.Images[7].src = "graphics/block/block-81.png";
+    this.Images[8].src = "images/particlesheet.png";
+    this.Images[9].src = "images/enemysheet.png";
     //this.Images[5].src = "graphics/background2/background2-35.png";
 var testAudio = new Audio();
     
