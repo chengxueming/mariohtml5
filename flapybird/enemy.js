@@ -235,7 +235,7 @@ Mario.Enemy.prototype.SubMove = function(xa, ya) {
             collide = true;
         }
         
-        if (this.AvoidCliffs && this.OnGround && !this.World.Level.IsBlocking(((this.X + this.Xa - this.Width) / 16) | 0, ((this.Y / 16) + 1) | 0, this.Xa, 1)) {
+        if (this.AvoidCliffs && this.OnGround && !this.World.Level.IsBlocking(((this.X + this.Xa - this.Width) / 32) | 0, ((this.Y / 32) + 1) | 0, this.Xa, 1)) {
             collide = true;
         }
     }
@@ -268,10 +268,10 @@ Mario.Enemy.prototype.SubMove = function(xa, ya) {
 };
 
 Mario.Enemy.prototype.IsBlocking = function(x, y, xa, ya) {
-    x = (x / 16) | 0;
-    y = (y / 16) | 0;
-    
-    if (x === (this.X / 16) | 0 && y === (this.Y / 16) | 0) {
+    var Width = 32
+    x = (x / Width) | 0;
+    y = (y / Width) | 0;
+    if (x === ((this.X / Width) | 0) && y === ((this.Y / Width) | 0)) {
         return false;
     }
     
@@ -351,7 +351,7 @@ Mario.Enemy.prototype.BumpCheck = function(xTile, yTile) {
     }
 };
 
-Mario.Enemy.prototype.SubDraw = Mario.NotchSprite.prototype.Draw;
+Mario.Enemy.prototype.SubDraw = Bird.NotchSprite.prototype.Draw;
 
 Mario.Enemy.prototype.Draw = function(context, camera) {
     var xPixel = 0, yPixel = 0;

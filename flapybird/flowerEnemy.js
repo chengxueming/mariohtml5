@@ -20,7 +20,7 @@ Mario.FlowerEnemy = function(world, x, y) {
     this.YStart = y;
     this.Ya = -8;
     this.Y -= 1;
-    this.Layer = 0;
+    this.Layer = 1;
     this.JumpTime = 0;
     this.Tick = 0;
     

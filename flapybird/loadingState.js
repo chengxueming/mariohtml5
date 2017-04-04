@@ -30,6 +30,7 @@ Bird.LoadingState.prototype.Enter = function() {
     this.Images[7].name = "ground";
     this.Images[8].name = "particles";
     this.Images[9].name = "enemies";
+    this.Images[10].name = "stone";
     
     
 
@@ -43,6 +44,7 @@ Bird.LoadingState.prototype.Enter = function() {
     this.Images[7].src = "graphics/block/block-81.png";
     this.Images[8].src = "images/particlesheet.png";
     this.Images[9].src = "images/enemysheet.png";
+    this.Images[10].src = "graphics/npc/npc-37.png";
     //this.Images[5].src = "graphics/background2/background2-35.png";
 var testAudio = new Audio();
     
@@ -127,7 +129,7 @@ Bird.LoadingState.prototype.CheckForChange = function(context) {
     if (this.ImagesLoaded) {
 		//set up the global map state variable
         //Bird.Character = new Bird.Character();
-        Mario.Character = new Mario.Character();
+        Mario.MarioCharacter = new Mario.Character();
         context.ChangeState(new Bird.LevelState());
     }
 };

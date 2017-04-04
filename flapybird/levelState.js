@@ -23,7 +23,11 @@ Bird.LevelState.prototype.Enter = function() {
     //Bird.Character.Initialize(this);
     Mario.MarioCharacter.Initialize(this);
     this.Sprites = new Enjine.DrawableManager();
-    this.AddSprite(Mario.MarioCharacter)
+    this.AddSprite(Mario.MarioCharacter);
+   //this.AddSprite(new Mario.FlowerEnemy(this,200,200));
+   //this.AddSprite(new Mario.StoneEnemy(this,100,200));
+    this.AddSprite(new Mario.Enemy(this,50,200,0,0,false));
+    //this.AddSprite(new Mario.Enemy(this,300,200,0,0,true));
     this.GotoLoseState = false;
 };
 
@@ -40,6 +44,14 @@ Bird.LevelState.prototype.Update = function(delta) {
     }
     if (this.Camera.Y < 0) {
         this.Camera.Y = 0;
+    }
+
+    for (i = 0; i < this.Sprites.Objects.length; i++) {
+        this.Sprites.Objects[i].Update(delta);
+    }
+
+    for (i = 0; i < this.Sprites.Objects.length; i++) {
+        this.Sprites.Objects[i].CollideCheck();
     }
 
 
