@@ -160,6 +160,11 @@ Mario.Enemy.prototype.Move = function() {
     this.XPic = runFrame;
 };
 
+Mario.Enemy.prototype.EditorMove = function() {
+    //this.XPic = (((this.Tick / 2) | 0) & 1) * 2 + (((this.Tick / 6) | 0) & 1);
+}
+
+
 Mario.Enemy.prototype.SubMove = function(xa, ya) {
     var collide = false;
     

@@ -22,7 +22,6 @@ Mario.FlowerEnemy = function(world, x, y) {
     this.Y -= 1;
     this.Layer = 0;
     this.JumpTime = 0;
-    this.Tick = 0;
     
     var i = 0;
     for (i = 0; i < 4; i++) {
@@ -53,7 +52,6 @@ Mario.FlowerEnemy.prototype.Move = function() {
         return;
     }
     
-    this.Tick++;
     
     if (this.Y >= this.YStart) {
         this.YStart = this.Y;
@@ -74,3 +72,7 @@ Mario.FlowerEnemy.prototype.Move = function() {
     
     this.XPic = (((this.Tick / 2) | 0) & 1) * 2 + (((this.Tick / 6) | 0) & 1);
 };
+
+Mario.FlowerEnemy.prototype.EditorMove = function() {
+    this.XPic = (((this.Tick / 2) | 0) & 1) * 2 + (((this.Tick / 6) | 0) & 1);
+}

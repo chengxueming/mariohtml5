@@ -15,6 +15,7 @@ Mario.NotchSprite = function(image) {
     this.Visible = true;
     this.Image = image;
     this.Delta = 0;
+    this.Tick = 0;
     this.SpriteTemplate = null;
     this.Layer = 1;
 };
@@ -41,6 +42,7 @@ Mario.NotchSprite.prototype.Draw = function(context, camera) {
 Mario.NotchSprite.prototype.Update = function(delta) {
     this.XOld = this.X;
     this.YOld = this.Y;
+    this.Tick ++;
     this.Move();
     this.Delta = delta;
 };
@@ -50,6 +52,18 @@ Mario.NotchSprite.prototype.UpdateNoMove = function(delta) {
     this.YOld = this.Y;
     this.Delta = 0;
 };
+
+Mario.NotchSprite.prototype.UpdateEditor = function(delta) {
+    this.XOld = this.X;
+    this.YOld = this.Y;
+    this.Tick ++;
+    this.EditorMove();
+    this.Delta = 0;
+};
+
+Mario.NotchSprite.prototype.EditorMove = function() {
+};
+
 
 Mario.NotchSprite.prototype.Move = function() {
     this.X += this.Xa;

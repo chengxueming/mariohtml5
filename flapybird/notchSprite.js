@@ -32,9 +32,9 @@ Bird.NotchSprite.prototype.Draw = function(context, camera) {
     
     context.save();
     context.scale(this.XFlip ? -1 : 1, this.YFlip ? -1 : 1);
-    context.translate(this.XFlip ? -320 : 0, this.YFlip ? -240 : 0);
+    context.translate(this.XFlip ? -320 : 0, this.YFlip ? -256 : 0);
     context.drawImage(this.Image, this.XPic * this.PicWidth, this.YPic * this.PicHeight, this.PicWidth, this.PicHeight,
-        this.XFlip ? (320 - xPixel - this.PicWidth) : xPixel, this.YFlip ? (240 - yPixel - this.PicHeight) : yPixel, this.PicWidth, this.PicHeight);
+        this.XFlip ? (320 - xPixel - this.PicWidth) : xPixel, this.YFlip ? (256 - yPixel - this.PicHeight) : yPixel, this.PicWidth, this.PicHeight);
     context.restore();
 };
 

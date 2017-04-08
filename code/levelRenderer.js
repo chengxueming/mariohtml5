@@ -98,3 +98,7 @@ Mario.LevelRenderer.prototype.DrawExit1 = function(context, camera) {
         context.drawImage(Enjine.Resources.Images["map"], frame.X, frame.Y, frame.Width, frame.Height, (this.Level.ExitX << 4) - camera.X + 16, (y << 4) - camera.Y, frame.Width, frame.Height);
     }
 };
+
+Mario.LevelRenderer.prototype.SetLevel = function(level){
+    this.Level = level;
+};
