@@ -59,8 +59,58 @@ Editor.EditorState.prototype.Enter = function() {
     this.Layer = new Mario.LevelRenderer(this.Level, 320, 240);
     $("#editor").find("img").click(function(e){
         // body...
-        alert(1);
+        var num = this.attr("target");
+        var type = this.attr("type");
+        $("#editor").find("img[state=1]").eq(0).removeAttr("state");
+        this.attr("state",1);
     });
+    function getMapIndex(e,ele,width=16,height=16){
+        var X = parseInt(e.clientX - ele.offset().left);
+        var Y = parseInt(e.clientY - ele.offset().top);
+        var map = {};
+        map.X = parseInt(X/width);
+        map.Y = parseInt(Y/height);
+        return map;
+    }
+    $("#canvas").mousemove(function(e) {
+        // body...
+         // body...
+        var img = $("#editor").find("img[state=1]").eq(0);
+        var target = img.attr("target");
+        var type = img.attr("type");
+        var map = getMapIndex(e,this);
+        lastTarget = undefined;
+        lastType = undefined;
+        lastX = undefined;
+        lastY = undefined;
+
+ 
+        switch(type){
+            case "block":
+                this.Level.SetBlock(lastX,lastY,lastTarget);
+                lastTarget = this.Level.GetBlock(map.X,map.Y);
+                this.Level.SetBlock(map.X,map.Y,target);
+            break;
+            case "npc":
+                this.Level.SetSpriteTemplate(lastX,lastY,new Mario.SpriteTemplate(lastTarget, ((Math.random() * 35) | 0) < 0);)
+                lastTarget = this.Level.GetSpriteTemplate(map.X,map.Y);
+                this.Level.SetSpriteTemplate(map.X,map.Y,new Mario.SpriteTemplate(target, ((Math.random() * 35) | 0) < 0);)
+            break;
+        };
+        lastTarget = target;
+        lasttype = type;
+        lastX = map.X;
+        lastY = map.Y;
+    })
+    $("#canvas").click(function(e) {
+        var img = $("#editor").find("img[state=1]").eq(0);
+        var target = img.attr("target");
+        var map = getMapIndex(e,this)
+        if(map == {"X":lastX,"Y":lastY})
+        {
+            lastTarget = target;
+        }
+    })
 };
 
 Editor.EditorState.prototype.Exit = function() {

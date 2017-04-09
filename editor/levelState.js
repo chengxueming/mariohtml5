@@ -3,10 +3,9 @@
 	Code by Rob Kleffner, 2011
 */
 
-Editor.LevelState = function(difficulty, type) {
-    this.LevelDifficulty = difficulty;
+Editor.LevelState = function(type, level) {
     this.LevelType = type;
-    this.Level = null;
+    this.Level = level;
     this.Layer = null;
     this.BgLayer = [];
 
@@ -35,8 +34,8 @@ Editor.LevelState = function(difficulty, type) {
 Editor.LevelState.prototype = new Enjine.GameState();
 
 Editor.LevelState.prototype.Enter = function() {
-    var levelGenerator = new Mario.LevelGenerator(320, 15), i = 0, scrollSpeed = 0, w = 0, h = 0, bgLevelGenerator = null;
-    this.Level = levelGenerator.CreateLevel(this.LevelType, this.LevelDifficulty);
+    //var levelGenerator = new Mario.LevelGenerator(320, 15), i = 0, scrollSpeed = 0, w = 0, h = 0, bgLevelGenerator = null;
+    //this.Level = levelGenerator.CreateLevel(this.LevelType, this.LevelDifficulty);
 
     //play music here
     if (this.LevelType === Mario.LevelType.Overground) {
