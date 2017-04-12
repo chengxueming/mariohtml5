@@ -137,6 +137,7 @@ Editor.LoadingState.prototype.Draw = function(context) {
 Editor.LoadingState.prototype.CheckForChange = function(context) {
     if (this.ImagesLoaded) {
 		//set up the global map state variable
-        context.ChangeState(new Editor.EditorState());
+        Editor.editor = new Editor.EditorState();
+        context.ChangeState(Editor.editor);
     }
 };

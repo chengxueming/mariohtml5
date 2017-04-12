@@ -86,6 +86,12 @@ Mario.Character.prototype.Initialize = function(world) {
     this.SetLarge(this.Large, this.Fire);
 };
 
+Mario.Character.prototype.SetPosition = function(X,Y) {
+    // body...
+    this.X = X;
+    this.Y = Y;
+}
+
 Mario.Character.prototype.SetLarge = function(large, fire) {
     if (fire) {
         large = true;
@@ -661,3 +667,8 @@ Mario.Character.prototype.GetCoin = function() {
         this.Get1Up();
     }
 };
+
+
+Mario.Character.prototype.EditorMove = function() {
+    //this.XPic = (((this.Tick / 2) | 0) & 1) * 2 + (((this.Tick / 6) | 0) & 1);
+}
