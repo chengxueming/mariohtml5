@@ -191,6 +191,24 @@ Mario.Level = function(width, height) {
 };
 
 Mario.Level.prototype = {
+    ReSize: function(X,Y) {
+        this.Width += X;
+        this.Height += Y;
+        var Map = new Array(this.Map);
+        var Data = new Array(this.Data);
+        var SpriteTemplates = new Array(this.SpriteTemplates);
+        for (x = 0; x < this.Width; x++) {
+            this.Map[x] = [];
+            this.Data[x] = [];
+            this.SpriteTemplates[x] = [];
+            
+            for (y = 0; y < this.Height; y++) {
+                this.Map[x][y] = Map[x][y];
+                this.Data[x][y] = Data[x][y];
+                this.SpriteTemplates[x][y] = SpriteTemplates[x][y];
+            }
+        }
+    },
     Update: function() {
         var x = 0, y = 0;
         for (x = 0; x < this.Width; x++) {

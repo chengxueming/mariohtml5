@@ -31,41 +31,6 @@ Editor.EditorState.prototype.Enter = function() {
     this.Level = new Mario.Level(20,15);
     this.Sprites = new Enjine.DrawableManager();
 
-  // this.Level.Map = [[0,0,1,2,3,4,5,0,0,0,0,0,0,129,145],
-  //   [10,11,12,0,0,0,0,0,0,0,0,0,0,129,145],
-  //   [0,0,0,0,0,0,0,0,0,0,0,0,129,129,145],
-  //   [0,0,0,0,0,0,0,0,0,0,0,0,26,129,145],
-  //   [0,0,0,0,0,0,0,0,0,0,0,0,27,129,145],
-  //   [0,0,0,0,0,0,0,0,0,0,0,0,28,129,145],
-  //   [0,0,0,0,0,0,0,0,0,0,0,0,30,129,145],
-  //   [0,0,0,0,0,0,0,0,0,0,0,0,32,129,145],
-  //   [0,0,0,0,0,0,0,0,0,0,0,0,36,129,145],
-  //   [0,0,0,0,0,0,0,0,0,0,0,0,39,129,145],
-  //   [0,0,0,0,0,0,0,0,0,0,0,0,130,129,145],
-  //   [0,0,0,0,0,0,0,0,0,0,0,0,130,129,145],
-  //   [0,0,0,0,0,4,5,6,7,0,0,0,0,129,145],
-  //   [0,0,0,0,0,32,33,34,35,0,0,0,0,129,145],
-  //   [0,0,0,0,0,16,17,18,19,20,21,0,0,129,145],
-  //   [0,0,0,0,0,0,224,225,226,0,0,0,0,129,145],
-  //   [0,0,0,0,0,0,0,0,0,0,0,0,0,129,145],
-  //   [0,0,0,0,0,0,0,32,28,0,0,0,0,129,145],
-  //   [0,0,0,0,0,0,62,71,0,0,0,0,0,129,145],
-  //   [0,0,0,0,0,0,0,0,0,0,0,0,129,129,145],
-  //   [0,0,0,0,0,0,0,0,0,0,0,0,129,129,145],
-  //   [0,0,0,0,0,0,0,0,0,0,0,0,129,129,145],
-  //   [0,0,0,0,0,0,0,0,0,0,0,129,129,129,145],
-  //   [0,0,0,0,0,0,0,0,0,0,0,0,0,129,145],
-  //   [0,0,0,0,0,0,0,0,0,0,0,0,0,129,145],
-  //   [0,0,0,0,0,0,0,0,0,0,0,0,0,129,145]];
-
-
-  //   //this.Level.SetSpriteTemplate(10, 10, new Mario.SpriteTemplate(type, ((Math.random() * 35) | 0) < this.level.Difficulty));
-  //   this.Level.SpriteTemplates[10][10] = new Mario.SpriteTemplate(0, ((Math.random() * 35) | 0) < 0);
-  //   this.Level.SpriteTemplates[11][10] = new Mario.SpriteTemplate(1, ((Math.random() * 35) | 0) < 0);
-  //   this.Level.SpriteTemplates[12][10] = new Mario.SpriteTemplate(2, ((Math.random() * 35) | 0) < 0);
-  //   this.Level.SpriteTemplates[13][10] = new Mario.SpriteTemplate(3, ((Math.random() * 35) | 0) < 0);
-  //   this.Level.SpriteTemplates[4][6] = new Mario.SpriteTemplate(4, ((Math.random() * 35) | 0) < 0);
-
     function generateBackground(levelType) {
       // body...
       for (i = 0; i < 2; i++) {
@@ -77,16 +42,6 @@ Editor.EditorState.prototype.Enter = function() {
       }
     }
     this.Layer = new Mario.LevelRenderer(this.Level, 320, 240);
-    $("#editor").find("img").click(function(e){
-        // body...
-        var num = $(this).attr("target");
-        var type = $(this).attr("type");
-        if($("#editor").find("[state=1]").eq(0) != null)
-        {
-            $("#editor").find("[state=1]").eq(0).removeAttr("state");
-        }
-        $(this).attr("state",1);
-    }); 
     $("#background").find("button").click(function(e) {
       // body...
         Editor.editor.LevelType = Mario.LevelType[$(this).text()];
@@ -100,6 +55,51 @@ Editor.EditorState.prototype.Enter = function() {
         map.Y = parseInt(Y/height);
         return map;
     };
+    $("#TileSet").find("div").each(function (){
+        //deal button 
+        if($(this).attr("id") != "navButton")
+        {
+           if($(this).attr("id") != "Grass")
+           {
+              $(this).css("display","none");
+           }
+           $(this).find("img").click(function () {
+             // body...
+             removeState();
+             $(this).attr("state",1);
+           })
+        }
+        $("#navButton").find("button").click(function (e){
+            var target = $(this).text();
+            
+            //deal show style
+            $("#TileSet").find("div").each(function () {
+              // body...
+                if($(this).attr("id") != "navButton")
+                {
+                   if($(this).attr("id") == target)
+                   {  
+                     $(this).css("display","inline");
+                   }else
+                   {
+                     $(this).css("display","none");
+                   }
+                }else
+                {
+                   $(this).find("button").each(function (){
+                     // body...
+                      if($(this).text() == target)
+                      {
+                        $(this).css("color","green");
+                      }else
+                      {
+                        $(this).removeAttr("style");
+                      }
+                   })
+                }
+            });
+        });
+    });
 
     function removeState() {
           if($("#editor").find("[state=1]").eq(0) != null)
@@ -119,6 +119,7 @@ Editor.EditorState.prototype.Enter = function() {
         var type = img.parent().attr("id");
         return {"target":target,"type":type};
     }
+
 
     $("#canvas").mousemove(function(e){
         // body...
@@ -169,6 +170,27 @@ Editor.EditorState.prototype.Enter = function() {
                 }
                 Editor.editor.Player1.SetPosition(map.X * Editor.editor.BlockWidth,map.Y * Editor.editor.BlockWidth);
                 break;
+            case "LevelBoundy":
+                switch(target)
+                {
+                  case "Right":
+                      if(map.X >= Editor.editor.Level.Width)
+                      {
+                          Editor.editor.Level.ReSize(map.X - Editor.editor.Level.Width + 1,0);
+                      }
+                  break;
+                  case "Up":
+                      if(map.X >= Editor.editor.Level.Width)
+                      {
+                          Editor.editor.Level.ReSize(0,map.Y - Editor.editor.Level.Height + 1);
+                      }
+                  break;
+                  case "Left":
+                  break;
+                  case "Bottom":
+                  break;
+                }
+                generateBackground(this.LevelType);
         };
         Editor.editor.lasttype = type;
          if(Editor.editor.lastX != map.X || Editor.editor.lastY != map.Y)
@@ -194,7 +216,7 @@ Editor.EditorState.prototype.Enter = function() {
             break;
             case "block":
                 Editor.editor.lastTarget = target;
-            break;
+                break;
         };
     });
     (function(argument) {
@@ -216,7 +238,7 @@ Editor.EditorState.prototype.Enter = function() {
            obj.css("background-image","url('"+obj.attr("src")+"')");
            obj.css("background-repeat","no-repeat");
            obj.css("float","left");
-        }
+        };
 
 
         $("#player").css("clear","both");
@@ -227,6 +249,66 @@ Editor.EditorState.prototype.Enter = function() {
           });
       })
     })();
+    $("#LevelBoundy").find("button").each(function(argument) {
+        $(this).click(function(e) {
+          removeState();
+          $(this).attr("state",1);
+        });
+    });
+    function changeContent() {
+      // body...
+      var obj = {
+        0:{"src":""},
+        1:{"src":"graphics\\npc\\npc-9.png"},
+        2:{"src":"graphics\\npc\\npc-14.png"},
+        3:{"src":""},
+        4:{"src":""},
+        5:{"src":""}
+      };
+      var index = $("#slider").slider("value");
+      $("#BlockCotents").find("img").eq(0).attr("src",obj[index].src);
+    }
+    $("#slider").slider({
+      max: 8,
+      min: 0,
+      change: changeContent
+    });
+
+      function objToTable(obj){
+         var html = "<table>";
+        var row = parseInt(obj.data.length/obj.width);
+         for(var i =0;i<row;i++)
+         {
+            var tr = "<tr>";
+            for(var j = 0;j<obj.width;j++)
+            {
+               var index = i*row + j;
+               tr += "<td>"+obj.data[index]+"</td>"
+            }
+            tr +="</tr>"
+            html += tr;
+         }
+         html +="</table>";
+         return html;
+      }
+    (function(){
+      var obj = {
+          "width":3,
+          "data":[
+          '',
+          '<button type="button" class="btn btn-default" aria-label="Left Align"><span class="glyphicon glyphicon-triangle-top" aria-hidden="true"></span>',
+          '',
+              '<button type="button" class="btn btn-default" aria-label="Left Align"><span class="glyphicon glyphicon-triangle-bottom" aria-hidden="true"></span></button>',
+        '<button type="button" class="btn btn-default" aria-label="Left Align"><span class=" " aria-hidden="true"></span></button>',
+        '<button type="button" class="btn btn-default" aria-label="Left Align"><span class="glyphicon glyphicon-triangle-right" aria-hidden="true"></span></button>',
+      '',
+          '<button type="button" class="btn btn-default" aria-label="Left Align"><span class="glyphicon glyphicon-triangle-bottom" aria-hidden="true"></span></button>',
+      '']
+      };
+      var html = objToTable(obj);
+      $("#BlockSize").append(html);
+    })();
+    
 };
 
 Editor.EditorState.prototype.Exit = function() {
@@ -246,8 +328,20 @@ Editor.EditorState.prototype.Update = function(delta) {
     {
       this.Sprites.Add(this.Player1);
     }
-    if (Enjine.KeyboardInput.IsKeyDown(Enjine.Keys.Right)) {
+    if (Enjine.KeyboardInput.IsKeyDown(Enjine.Keys.F5)) {
         this.GotoLevelState = true;
+    }    
+    if (Enjine.KeyboardInput.IsKeyDown(Enjine.Keys.Right)) {
+        this.Camera.X += this.BlockWidth;
+    }
+    if (Enjine.KeyboardInput.IsKeyDown(Enjine.Keys.Up)) {
+        this.Camera.Y -= this.BlockWidth;
+    }
+    if (Enjine.KeyboardInput.IsKeyDown(Enjine.Keys.Down)) {
+
+    }
+    if (Enjine.KeyboardInput.IsKeyDown(Enjine.Keys.Left)) {
+
     }
     for (x = ((this.Camera.X / 16) | 0) - 1; x <= (((this.Camera.X + this.Layer.Width) / 16) | 0) + 1; x++) {
         for (y = ((this.Camera.Y / 16) | 0) - 1; y <= (((this.Camera.Y + this.Layer.Height) / 16) | 0) + 1; y++) {
@@ -296,7 +390,7 @@ Editor.EditorState.prototype.CheckForChange = function(context) {
       Mario.MarioCharacter = new Mario.Character();
       Mario.MarioCharacter.SetPosition(this.Player1.CharacterX,this.Player1.CharacterY);
       Mario.MarioCharacter.Image = Enjine.Resources.Images["smallMario"];
-		  context.ChangeState(new Editor.LevelState(Editor.editor.LevelType,this.Level));
+		  context.ChangeState(new Editor.LevelState(this.LevelType,this.Level));
 	}
 };
 
