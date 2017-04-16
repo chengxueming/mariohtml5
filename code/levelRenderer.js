@@ -32,7 +32,10 @@ Mario.LevelRenderer.prototype.Draw = function(context, camera) {
 
 Mario.LevelRenderer.prototype.DrawStatic = function(context, camera) {
     var x = 0, y = 0, b = 0, frame = null, xTileStart = (camera.X / 16) | 0, xTileEnd = ((camera.X + this.Width) / 16) | 0;
-    
+    if(xTileEnd + 1 > this.Level.Width)
+    {
+        xTileEnd = this.Level.Width - 1;
+    }
     for (x = xTileStart; x < xTileEnd + 1; x++) {
         for (y = 0; y < this.TilesY; y++) {
             b = this.Level.GetBlock(x, y) & 0xff;

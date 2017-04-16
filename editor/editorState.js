@@ -34,11 +34,10 @@ Editor.EditorState.prototype.Enter = function() {
     function generateBackground(levelType) {
       // body...
       for (i = 0; i < 2; i++) {
-        scrollSpeed = 4 >> i;
-        w = ((((Editor.editor.Level.Width * 16) - 320) / scrollSpeed) | 0) + 320;
-        h = ((((Editor.editor.Level.Height * 16) - 240) / scrollSpeed) | 0) + 240;
-        bgLevelGenerator = new Mario.BackgroundGenerator(w / 32 + 1, h / 32 + 1, i === 0, levelType);
-        Editor.editor.BgLayer[i] = new Mario.BackgroundRenderer(bgLevelGenerator.CreateLevel(), 320, 240, scrollSpeed);
+        w = Editor.editor.Level.Width * 16;
+        h = Editor.editor.Level.Height * 16;
+        bgLevelGenerator = new Mario.BackgroundGenerator(w / 32 + 1, h / 32 + 1,i===0, levelType);
+        Editor.editor.BgLayer[i] = new Mario.BackgroundRenderer(bgLevelGenerator.CreateLevel(), 320, 240, 1);
       }
     }
     this.Layer = new Mario.LevelRenderer(this.Level, 320, 240);
@@ -48,14 +47,16 @@ Editor.EditorState.prototype.Enter = function() {
         generateBackground(Editor.editor.LevelType);
     });
     function getMapIndex(e,ele,width=32,height=32) {
-        var X = parseInt(e.clientX - 0);//ele.offset().left);
-        var Y = parseInt(e.clientY - 0);//ele.offset().top);
+        var X = e.layerX - ele.offsetLeft + 2*Editor.editor.Camera.X;
+        var Y = e.layerY - ele.offsetTop + 2*Editor.editor.Camera.Y;
         var map = {};
+                console.log("my Pos"+X+" "+Y);
+        console.log("ScreenPos"+e.layerX+" "+e.layerY);
         map.X = parseInt(X/width);
         map.Y = parseInt(Y/height);
         return map;
     };
-    $("#TileSet").find("div").each(function (){
+    $("#TileSet").children("div").each(function (){
         //deal button 
         if($(this).attr("id") != "navButton")
         {
@@ -73,7 +74,7 @@ Editor.EditorState.prototype.Enter = function() {
             var target = $(this).text();
             
             //deal show style
-            $("#TileSet").find("div").each(function () {
+            $("#TileSet").children("div").each(function () {
               // body...
                 if($(this).attr("id") != "navButton")
                 {
@@ -116,7 +117,16 @@ Editor.EditorState.prototype.Enter = function() {
             return;
         }
         var target = img.attr("target");
-        var type = img.parent().attr("id");
+        if(target == undefined)
+        {
+          target = img.text();
+        }
+        var parent = img.parent();
+        // while(parent.parent() != $("#editor"))
+        // {
+        //   parent = parent.parent();
+        // }
+        var type = parent.attr("id");
         return {"target":target,"type":type};
     }
 
@@ -132,7 +142,8 @@ Editor.EditorState.prototype.Enter = function() {
 
         switch(type)
         {
-            case "block":
+            case "Grass":
+            case "Special":
                 if(Editor.editor.lastTarget == undefined || !(Editor.editor.lastX == map.X && Editor.editor.lastY == map.Y))
                 {
                     if(!(Editor.editor.lastX == undefined || Editor.editor.lastY == undefined))
@@ -190,7 +201,7 @@ Editor.EditorState.prototype.Enter = function() {
                   case "Bottom":
                   break;
                 }
-                generateBackground(this.LevelType);
+                generateBackground(Editor.editor.LevelType);
         };
         Editor.editor.lasttype = type;
          if(Editor.editor.lastX != map.X || Editor.editor.lastY != map.Y)
@@ -214,19 +225,14 @@ Editor.EditorState.prototype.Enter = function() {
             case "npc":
                 Editor.editor.lastTarget = new Mario.SpriteTemplate(target, ((Math.random() * 35) | 0) < 0);
             break;
-            case "block":
+            case "Grass":
+            case "Special":
                 Editor.editor.lastTarget = target;
                 break;
         };
     });
-    (function(argument) {
-      // body...
-      $("#player").find("button").click(function() {
-          removeState();
-          $(this).attr("state",1);
-      });
-
-      $("#npc").find("div").each(function() {
+    function showOneImg(ele,clearEle) {
+        ele.find("div").each(function() {
         // body...
         var img = new Image();
         img.src = $(this).attr("src");
@@ -241,13 +247,23 @@ Editor.EditorState.prototype.Enter = function() {
         };
 
 
-        $("#player").css("clear","both");
+        clearEle.css("clear","both");
         $(this).click(function(e) {
           // body...
           removeState();
           $(this).attr("state",1);
           });
       })
+    }
+    (function(argument) {
+      // body...
+      $("#player").find("button").click(function() {
+          removeState();
+          $(this).attr("state",1);
+      });
+
+      showOneImg($("#npc"),$("#npc").next());
+      showOneImg($("#Special"),$("#BlockContents"));
     })();
     $("#LevelBoundy").find("button").each(function(argument) {
         $(this).click(function(e) {
@@ -266,7 +282,7 @@ Editor.EditorState.prototype.Enter = function() {
         5:{"src":""}
       };
       var index = $("#slider").slider("value");
-      $("#BlockCotents").find("img").eq(0).attr("src",obj[index].src);
+      $("#BlockContents").find("img").eq(0).attr("src",obj[index].src);
     }
     $("#slider").slider({
       max: 8,
@@ -328,20 +344,26 @@ Editor.EditorState.prototype.Update = function(delta) {
     {
       this.Sprites.Add(this.Player1);
     }
-    if (Enjine.KeyboardInput.IsKeyDown(Enjine.Keys.F5)) {
+    if (Enjine.KeyboardInput.IsKeyDown(Enjine.Keys.Tab)) {
         this.GotoLevelState = true;
     }    
     if (Enjine.KeyboardInput.IsKeyDown(Enjine.Keys.Right)) {
         this.Camera.X += this.BlockWidth;
     }
     if (Enjine.KeyboardInput.IsKeyDown(Enjine.Keys.Up)) {
+      if(this.Camera.Y >= this.BlockWidth)
+      {
         this.Camera.Y -= this.BlockWidth;
+      }
     }
     if (Enjine.KeyboardInput.IsKeyDown(Enjine.Keys.Down)) {
-
+        this.Camera.Y += this.BlockWidth;
     }
     if (Enjine.KeyboardInput.IsKeyDown(Enjine.Keys.Left)) {
-
+        if(this.Camera.X >= this.BlockWidth)
+        {
+            this.Camera.X -= this.BlockWidth;
+        }
     }
     for (x = ((this.Camera.X / 16) | 0) - 1; x <= (((this.Camera.X + this.Layer.Width) / 16) | 0) + 1; x++) {
         for (y = ((this.Camera.Y / 16) | 0) - 1; y <= (((this.Camera.Y + this.Layer.Height) / 16) | 0) + 1; y++) {
