@@ -22,7 +22,10 @@ Mario.BackgroundRenderer.prototype.Draw = function(context, camera) {
     var xTileStart = (xCam / 32) | 0;
     //the +1 makes sure the right edge tiles get drawn
     var xTileEnd = (((xCam + this.Width) / 32) | 0);
-    
+    if(xTileEnd >= this.Level.Width)
+    {
+        xTileEnd = this.Level.Width - 1;
+    }
     for (x = xTileStart; x <= xTileEnd; x++) {
         for (y = 0; y < this.TilesY; y++) {
             b = this.Level.GetBlock(x, y) & 0xff;

@@ -196,9 +196,10 @@ Mario.Level.prototype = {
         var height = this.Height;
         this.Width += X;
         this.Height += Y;
-        var Map = new Array(this.Map);
-        var Data = new Array(this.Data);
-        var SpriteTemplates = new Array(this.SpriteTemplates);
+        var Map = this.Map.concat();
+        var Data = this.Data.concat();
+        var SpriteTemplates = this.SpriteTemplates.concat();
+        var x = 0, y = 0;
         for (x = 0; x < this.Width; x++) {
             this.Map[x] = [];
             this.Data[x] = [];

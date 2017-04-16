@@ -389,8 +389,8 @@ Editor.EditorState.prototype.Update = function(delta) {
 
 Editor.EditorState.prototype.Draw = function(context) {
 
-    context.save();
-    context.translate(-this.Camera.X, -this.Camera.Y);
+    context.fillStyle = "rgb(0, 0, 0)";
+    context.fillRect(0, 0, 640, 480);
     if(this.BgLayer.length == 2)
     {
       for (i = 0; i < 2; i++) {
@@ -398,13 +398,15 @@ Editor.EditorState.prototype.Draw = function(context) {
       }
     }
     //Editor.Character.Draw(context, this.Camera);
-    this.Layer.Draw(context, this.Camera);
+    context.save(); 
+    context.translate(-this.Camera.X, -this.Camera.Y);
     for (i = 0; i < this.Sprites.Objects.length; i++) {
         if (this.Sprites.Objects[i].Layer === 1) {
             this.Sprites.Objects[i].Draw(context, this.Camera);
         }
     }
     context.restore();
+    this.Layer.Draw(context, this.Camera);
 };
 
 Editor.EditorState.prototype.CheckForChange = function(context) {
