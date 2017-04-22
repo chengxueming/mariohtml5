@@ -20,8 +20,6 @@ Editor.EditorState.prototype.Enter = function() {
     this.Font = Mario.SpriteCuts.CreateWhiteFont();
     this.Background = new Editor.Background(Enjine.Resources.Images["block-38"],320,240);
     this.Camera = new Enjine.Camera;
-    this.Camera.X = 20;
-    this.Camera.Y = 20;
 };
 
 Editor.EditorState.prototype.Exit = function() {
@@ -32,11 +30,22 @@ Editor.EditorState.prototype.Exit = function() {
 Editor.EditorState.prototype.Update = function(delta) {
   this.Delta = delta;
   this.DeathTime ++;
+  if (Enjine.KeyboardInput.IsKeyDown(Enjine.Keys.Right)) {
+    this.Camera.X += 16;
+    }
+    if (Enjine.KeyboardInput.IsKeyDown(Enjine.Keys.Up)) {
+        this.Camera.Y -= 16;
+    }
+    if (Enjine.KeyboardInput.IsKeyDown(Enjine.Keys.Down)) {
+        this.Camera.Y += 16;
+    }
+    if (Enjine.KeyboardInput.IsKeyDown(Enjine.Keys.Left)) {
+            this.Camera.X -= 16;
+    }
 };
 
 Editor.EditorState.prototype.Draw = function(context) {
     this.Background.Draw(context,this.Camera);
-    context.fillRect(0,20,20,20);
 };
 
 Editor.EditorState.prototype.CheckForChange = function(context) {

@@ -31,6 +31,6 @@ Editor.Background.prototype.Draw = function(context, camera) {
             myContext.DrawImage(x*this.Img.width,y*this.Img.height);
         }
     }
-    context.stroke();
+
     context.restore();
 };
