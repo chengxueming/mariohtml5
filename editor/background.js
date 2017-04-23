@@ -12,25 +12,31 @@ Editor.Background = function(Img, width, height) {
 Editor.Background.prototype = new Enjine.Drawable();
 
 Editor.Background.prototype.Draw = function(context, camera) {
-    var myContext = new Editor.Context(context,this.Img,320,240);
+    console.log(camera);
+    var myContext = new Editor.Context(context,320,240);
     context.save();
     myContext.Translate(-camera.X,-camera.Y);
-    myContext.Rect(0,0,this.Width,this.Height);
-    context.clip();
+    myContext.ClipRect(0,0,this.Width,this.Height);
     var xTileStart = (camera.X/this.Img.width)|0;
     var yTileStart = (camera.Y/this.Img.height)|0;
     var xTileEnd = ((camera.X+this.Width)/this.Img.width)|0;
     var yTileEnd = ((camera.Y+this.Height)/this.Img.height)|0;
     xTileEnd = (xTileEnd < (this.Width/this.Img.width)|0)?xTileEnd:(this.Width/this.Img.width)|0;
     yTileEnd = (yTileEnd < (this.Height/this.Img.height)|0)?yTileEnd:(this.Height/this.Img.height)|0;
+
+    myContext.Scale(0.5,0.5);
+    xTileStart = 0;
+    yTileStart = 0;
+
+    xTileEnd = ((this.Width)/this.Img.width*0.5)|0;
+    yTileEnd = ((this.Height)/this.Img.height*0.5)|0;
     
-    for(var x = xTileStart;x <= xTileEnd;x++)
+    for(var x = 0;x <= 3;x++)
     {
-        for(var y = yTileStart;y<=yTileEnd;y++)
+        for(var y = 0;y<=3;y++)
         {
-            myContext.DrawImage(x*this.Img.width,y*this.Img.height);
+            myContext.DrawImage(this.Img,x*this.Img.width*0.5,y*this.Img.height*0.5);
         }
     }
-
     context.restore();
 };

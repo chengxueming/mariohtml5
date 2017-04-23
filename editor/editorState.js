@@ -18,7 +18,7 @@ Editor.EditorState.prototype = new Enjine.GameState();
 Editor.EditorState.prototype.Enter = function() {
     this.FontShadow = Mario.SpriteCuts.CreateBlackFont();
     this.Font = Mario.SpriteCuts.CreateWhiteFont();
-    this.Background = new Editor.Background(Enjine.Resources.Images["block-38"],320,240);
+    this.Background = new Editor.Background(Enjine.Resources.Images["background2-1"],10000,10000);
     this.Camera = new Enjine.Camera;
 };
 
@@ -45,6 +45,8 @@ Editor.EditorState.prototype.Update = function(delta) {
 };
 
 Editor.EditorState.prototype.Draw = function(context) {
+    context.fillStyle = "rgb(0,0,0)";
+    context.fillRect(0,0,320,240);
     this.Background.Draw(context,this.Camera);
 };
 
