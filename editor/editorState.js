@@ -18,7 +18,7 @@ Editor.EditorState.prototype = new Enjine.GameState();
 Editor.EditorState.prototype.Enter = function() {
     this.FontShadow = Mario.SpriteCuts.CreateBlackFont();
     this.Font = Mario.SpriteCuts.CreateWhiteFont();
-    this.Background = new Editor.Background(Enjine.Resources.Images["background2-1"],10000,10000);
+    this.Background = new Editor.Background(Enjine.Resources.Images["background2-1"],500,500);
     this.Camera = new Enjine.Camera;
 };
 

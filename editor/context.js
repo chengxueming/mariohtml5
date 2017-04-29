@@ -26,9 +26,26 @@ Editor.Context.prototype.ReStore = function() {
     this.Context.reStore();
 }
 
-Editor.Context.prototype.DrawImage = function(img,x,y) {
+Editor.Context.prototype.DrawImage = function(img,x,y,width,height) {
+    //dir = 1 right
     this.Context.drawImage(img, 0, 0, img.width, img.height,
-    x,this.Height-y-img.height*this.ScaleY , img.width*this.ScaleX, img.height*this.ScaleY);
+    x,this.Height-y-height , width, height);
+};
+
+Editor.Context.prototype.DrawRightImage = function(img,x,y,width,height,sx) {
+    //dir = 1 right
+    ox = sx;
+    sx = this.ConvertToOrigin(img.width,width,sx);
+    this.Context.drawImage(img ,sx , 0, img.width - sx, img.height,
+    x,this.Height-y-height , width - ox, height);
+};
+
+Editor.Context.prototype.DrawLeftImage = function(img,x,y,width,height,sx) {
+    //dir = 1 right
+    ox = sx;
+    sx = this.ConvertToOrigin(img.width,width,sx);
+    this.Context.drawImage(img, 0, 0, sx, img.height,
+    x,this.Height-y-height , ox, height);
 };
 
 Editor.Context.prototype.ClipRect = function(xStart,yStart,width,height) {
@@ -40,4 +57,8 @@ Editor.Context.prototype.ClipRect = function(xStart,yStart,width,height) {
 
 Editor.Context.prototype.Translate = function(xOffset,yOffset) {
 	this.Context.translate(xOffset,-yOffset);
+}
+
+Editor.Context.prototype.ConvertToOrigin = function(oLength,nLength,x) {
+    return (oLength/nLength) * x;
 }

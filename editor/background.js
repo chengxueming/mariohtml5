@@ -7,6 +7,9 @@ Editor.Background = function(Img, width, height) {
     this.Height = height;
     this.Width = width;
     this.Img = Img;
+    this.BgWidth = 320;
+    this.BgHeight = 200;
+    this.CloudImg = Enjine.Resources.Images["background2-2"]
 };
 
 Editor.Background.prototype = new Enjine.Drawable();
@@ -17,26 +20,30 @@ Editor.Background.prototype.Draw = function(context, camera) {
     context.save();
     myContext.Translate(-camera.X,-camera.Y);
     myContext.ClipRect(0,0,this.Width,this.Height);
-    var xTileStart = (camera.X/this.Img.width)|0;
-    var yTileStart = (camera.Y/this.Img.height)|0;
-    var xTileEnd = ((camera.X+this.Width)/this.Img.width)|0;
-    var yTileEnd = ((camera.Y+this.Height)/this.Img.height)|0;
-    xTileEnd = (xTileEnd < (this.Width/this.Img.width)|0)?xTileEnd:(this.Width/this.Img.width)|0;
-    yTileEnd = (yTileEnd < (this.Height/this.Img.height)|0)?yTileEnd:(this.Height/this.Img.height)|0;
+    this.DrawBgImg(myContext,this.Img,((camera.X / 16) * 10),this.BgWidth,this.BgHeight,0);
+    this.DrawBgImg(myContext,this.CloudImg,((camera.X / 16) * 1),this.BgWidth/3,this.BgHeight,this.BgHeight);
+    context.restore();
+};
 
-    myContext.Scale(0.5,0.5);
-    xTileStart = 0;
-    yTileStart = 0;
-
-    xTileEnd = ((this.Width)/this.Img.width*0.5)|0;
-    yTileEnd = ((this.Height)/this.Img.height*0.5)|0;
-    
-    for(var x = 0;x <= 3;x++)
+Editor.Background.prototype.DrawBgImg = function(context,img,scrollSpeed,width,height,y)
+{
+    var rightAlign = scrollSpeed;
+    while(rightAlign > width)
     {
-        for(var y = 0;y<=3;y++)
+        rightAlign = rightAlign - width;
+    }
+    var startX = 0;
+    var imgCount = ((this.Width / width) + 1) | 0;
+    for(var x = 0;x < imgCount ;x++)
+    {
+        if(startX == 0 && rightAlign != 0)
         {
-            myContext.DrawImage(this.Img,x*this.Img.width*0.5,y*this.Img.height*0.5);
+            context.DrawRightImage(img,startX,y,width,height,rightAlign);
+            startX = rightAlign;
+        }else{
+            context.DrawImage(img,startX,y,width,height);
+            startX += width;
         }
     }
-    context.restore();
+    context.DrawLeftImage(img,startX,y,width,height,rightAlign);
 };

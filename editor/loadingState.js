@@ -16,7 +16,7 @@ Editor.LoadingState.prototype = new Enjine.GameState();
 
 Editor.LoadingState.prototype.Enter = function() {
     var i = 0;
-    for (i = 0; i < 17; i++) {
+    for (i = 0; i < 18; i++) {
         this.Images[i] = {};
     }
     
@@ -37,6 +37,7 @@ Editor.LoadingState.prototype.Enter = function() {
     this.Images[14].name = "worldMap";
     this.Images[15].name = "background2-1";
     this.Images[16].name = "block-38";
+    this.Images[17].name = "background2-2";
 
     this.Images[0].src = "images/bgsheet.png";
     this.Images[1].src = "images/endscene.gif";
@@ -55,6 +56,7 @@ Editor.LoadingState.prototype.Enter = function() {
     this.Images[14].src = "images/worldmap.png";
     this.Images[15].src = "graphics/background2/background2-1.png";
     this.Images[16].src = "graphics/block/block-38.png";
+    this.Images[17].src = "graphics/background2/background2-2.png";
     
     Enjine.Resources.AddImages(this.Images);
     
