@@ -3,11 +3,9 @@
 	Code by Rob Kleffner, 2011
 */
 
-Mario.Level = function(width, height) {
+Mario.TileMap = function(width, height) {
     this.Width = width;
     this.Height = height;
-    this.ExitX = 10;
-    this.ExitY = 10;
     
     this.Map = [];
     this.Data = [];
@@ -27,9 +25,16 @@ Mario.Level = function(width, height) {
             this.SpriteTemplates[x][y] = null;
         }
     }
+
+    for (x = 0; x < this.Width; x++) {
+        this.Map[x][0] = 1;
+        this.Map[x][1] = 2;
+        this.Map[x][2] = 3;
+        this.Map[x][3] = 4;
+    }
 };
 
-Mario.Level.prototype = {
+Mario.TileMap.prototype = {
     ReSize: function(X,Y) {
         var width = this.Width;
         var height = this.Height;
@@ -69,36 +74,35 @@ Mario.Level.prototype = {
                 }
             }
         }
-    },
-
-    LoadResource: function() {
-        // body...
-        var fso = new ActiveXObject("Scripting.FileSystemObject");
-        //var f1 = fso.createtextfile("c:\\myjstest.txt",true");
+        this.Animate ++;
+        this.Animate %= 4;
     },
 
     Draw: function(context,camera) {
         var myContext = new Editor.Context(context,320,240);
-        var x = 0, y = 0, b = 0, frame = null, xTileStart = (camera.X / 16) | 0, xTileEnd = ((camera.X + this.Width) / 16) | 0;
-        if(xTileEnd + 1 > this.Level.Width)
+        var x = 0, y = 0, b = 0, frame = null, xTileStart = (camera.X / 16) | 0, xTileEnd = ((camera.X + this.Width*16) / 16) | 0;
+        if(xTileEnd + 1 > this.Width)
         {
-            xTileEnd = this.Level.Width - 1;
+            xTileEnd = this.Width - 1;
         }
+        context.save();
+        myContext.Translate(-camera.X,-camera.Y);
         for (x = xTileStart; x < xTileEnd + 1; x++) {
-            for (y = 0; y < this.TilesY; y++) {
-                b = this.Level.GetBlock(x, y) & 0xff;
-                if ((Mario.Tile.Behaviors[b] & Mario.Tile.Animated) === 0) {
-                    frame = this.Background[b % 16][(b / 16) | 0];
-                    var block = "block-"+b;
-                    if(Enjine.Resources.Images[block].height == 32)
-                    {
-                        myContext.drawImage(Enjine.Resources.Images[block], ((x << 4) - camera.X) | 0, (y << 4) | 0 ,32 ,32);
-                    }else{
-                        myContext.drawImage(Enjine.Resources.Images[block], ((x << 4) - camera.X) | 0, (y << 4) | 0 ,32 ,32,this.Animate,4);
-                    }
+            for (y = 0; y < this.Height; y++) {
+                b = this.GetBlock(x, y);
+                if(b == 0){
+                    continue;
+                }
+                var block = "block-"+b;
+                if(Enjine.Resources.Images[block].height == 32)
+                {
+                    myContext.DrawImage(Enjine.Resources.Images[block], ((x << 4)) | 0, (y << 4) | 0 ,16 ,16);
+                }else{
+                    myContext.DrawAnimation(Enjine.Resources.Images[block], ((x << 4)) | 0, (y << 4) | 0 ,16 ,16,this.Animate,4);
                 }
             }
         }
+        context.restore();
     },
     
     GetBlockCapped: function(x, y) {

@@ -66,6 +66,6 @@ Editor.Context.prototype.ConvertToOrigin = function(oLength,nLength,x) {
 Editor.Context.prototype.DrawAnimation = function(img,x,y,width,height,ypos,block) {
     // y pos from 0
     sy = (img.height/block) * ypos;
-    this.Context.drawImage(img, 0, sy, img.width, img.height,
+    this.Context.drawImage(img, 0, sy, img.width, img.height/block,
     x,this.Height-y-height , width, height);
 }

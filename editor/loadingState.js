@@ -12,6 +12,8 @@ Editor.LoadingState = function() {
     this.SoundIndex = 0;
 };
 
+
+
 Editor.LoadingState.prototype = new Enjine.GameState();
 
 Editor.LoadingState.prototype.Enter = function() {
@@ -59,7 +61,7 @@ Editor.LoadingState.prototype.Enter = function() {
     this.Images[17].src = "graphics/background2/background2-2.png";
     
     Enjine.Resources.AddImages(this.Images);
-    
+    this.LoadResource();
     var testAudio = new Audio();
 	
     if (testAudio.canPlayType("audio/mp3")) {
@@ -102,6 +104,27 @@ Editor.LoadingState.prototype.Enter = function() {
     //load the array of tile behaviors
     Mario.Tile.LoadBehaviors();
 };
+
+
+Editor.LoadingState.prototype.LoadResource = function() {
+    // body...
+    var path = "graphics/block/";
+    var files = [
+    "block-1",
+    "block-2",
+    "block-3",
+    "block-4",
+    "block-5",
+    "block-6",
+    ];
+    var imgs = [];
+    for (var i = 0; i < files.length; i++) {
+        var img = {"name":files[i],"src":path+files[i]+".png"};
+        imgs.push(img);
+    };
+    Enjine.Resources.AddImages(imgs);
+};
+
 
 Editor.LoadingState.prototype.Exit = function() {
     delete this.Images;
