@@ -61,7 +61,8 @@ Editor.LoadingState.prototype.Enter = function() {
     this.Images[17].src = "graphics/background2/background2-2.png";
     
     Enjine.Resources.AddImages(this.Images);
-    this.LoadResource();
+    this.LoadSmbxResource("block");
+    this.LoadSmbxResource("mario");
     var testAudio = new Audio();
 	
     if (testAudio.canPlayType("audio/mp3")) {
@@ -125,6 +126,25 @@ Editor.LoadingState.prototype.LoadResource = function() {
     Enjine.Resources.AddImages(imgs);
 };
 
+Editor.LoadingState.prototype.LoadSmbxResource = function(type) {
+    // body...
+    var path = "graphics/" + type + "/";
+    var files = [
+    "1",
+    "2",
+    "3",
+    "4",
+    "5",
+    "6",
+    ];
+    var imgs = [];
+    for (var i = 0; i < files.length; i++) {
+        var img = {"name":type+"-"+files[i],"src":path+type+"-"+files[i]+".png"};
+        imgs.push(img);
+    };
+    Enjine.Resources.AddImages(imgs);
+};
+
 
 Editor.LoadingState.prototype.Exit = function() {
     delete this.Images;
@@ -165,6 +185,8 @@ Editor.LoadingState.prototype.Draw = function(context) {
 
 Editor.LoadingState.prototype.CheckForChange = function(context) {
     if (this.ImagesLoaded) {
+        Mario.MarioCharacter = new Mario.Character();
+        Mario.MarioCharacter.Image = Enjine.Resources.Images["smallMario"];
 		//set up the global map state variable
         Editor.editor = new Editor.EditorState();
         context.ChangeState(Editor.editor);

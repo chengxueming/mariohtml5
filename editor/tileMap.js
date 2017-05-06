@@ -114,10 +114,14 @@ Mario.TileMap.prototype = {
     },
     
     GetBlock: function(x, y) {
-        if (x < 0) { x = 0; }
-        if (y < 0) { return 0; }
-        if (x >= this.Width) { x = this.Width - 1; }
-        if (y >= this.Height) { y = this.Height - 1; }
+        // if (x < 0) { x = 0; }
+        // if (y < 0) { return 0; }
+        // if (x >= this.Width) { x = this.Width - 1; }
+        // if (y >= this.Height) { y = this.Height - 1; }
+        if(x < 0 || y < 0 || x >= this.Width || y >= this.Height)
+        {
+            return 0;
+        }
         return this.Map[x][y];
     },
     
@@ -139,11 +143,11 @@ Mario.TileMap.prototype = {
     
     IsBlocking: function(x, y, xa, ya) {
         var block = this.GetBlock(x, y);
-        var blocking = ((Mario.Tile.Behaviors[block & 0xff]) & Mario.Tile.BlockAll) > 0;
-        blocking |= (ya > 0) && ((Mario.Tile.Behaviors[block & 0xff]) & Mario.Tile.BlockUpper) > 0;
-        blocking |= (ya < 0) && ((Mario.Tile.Behaviors[block & 0xff]) & Mario.Tile.BlockLower) > 0;
+        //var blocking = ((Mario.Tile.Behaviors[block & 0xff]) & Mario.Tile.BlockAll) > 0;
+        //blocking |= (ya > 0) && ((Mario.Tile.Behaviors[block & 0xff]) & Mario.Tile.BlockUpper) > 0;
+        //blocking |= (ya < 0) && ((Mario.Tile.Behaviors[block & 0xff]) & Mario.Tile.BlockLower) > 0;
 
-        return blocking;
+        return (block > 0);
     },
     
     GetSpriteTemplate: function(x, y) {

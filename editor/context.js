@@ -69,3 +69,9 @@ Editor.Context.prototype.DrawAnimation = function(img,x,y,width,height,ypos,bloc
     this.Context.drawImage(img, 0, sy, img.width, img.height/block,
     x,this.Height-y-height , width, height);
 }
+
+Editor.Context.prototype.DrawClipImage = function(img,x,y,width,height,sx,sy,swidth,sheight) {
+    // y pos from 0
+    this.Context.drawImage(img, sx, sy, swidth, sheight,
+    x,this.Height-y-height , width, height);
+}
