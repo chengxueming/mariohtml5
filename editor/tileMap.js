@@ -2,6 +2,27 @@
 	Represents a playable level in the game.
 	Code by Rob Kleffner, 2011
 */
+Mario.Tile = {
+    BlockUpper: 1 << 0,
+    BlockAll: 1 << 1,
+    BlockLower: 1 << 2,
+    Special: 1 << 3,
+    Bumpable: 1 << 4,
+    Breakable: 1 << 5,
+    PickUpable: 1 << 6,
+    Animated: 1 << 7,
+    Behaviors: [],
+    
+    LoadBehaviors: function() {
+        var b = {};
+        b[1] =  this.BlockAll;
+        b[2] = this.BlockAll;
+        b[3] = this.BlockAll;
+        b[4] = this.BlockLower | this.Animated; 
+        this.Behaviors = b;
+    }
+};
+
 
 Mario.TileMap = function(width, height) {
     this.Width = width;
@@ -143,9 +164,9 @@ Mario.TileMap.prototype = {
     
     IsBlocking: function(x, y, xa, ya) {
         var block = this.GetBlock(x, y);
-        //var blocking = ((Mario.Tile.Behaviors[block & 0xff]) & Mario.Tile.BlockAll) > 0;
-        //blocking |= (ya > 0) && ((Mario.Tile.Behaviors[block & 0xff]) & Mario.Tile.BlockUpper) > 0;
-        //blocking |= (ya < 0) && ((Mario.Tile.Behaviors[block & 0xff]) & Mario.Tile.BlockLower) > 0;
+        var blocking = ((Mario.Tile.Behaviors[block & 0xff]) & Mario.Tile.BlockAll) > 0;
+        blocking |= (ya > 0) && ((Mario.Tile.Behaviors[block & 0xff]) & Mario.Tile.BlockUpper) > 0;
+        blocking |= (ya < 0) && ((Mario.Tile.Behaviors[block & 0xff]) & Mario.Tile.BlockLower) > 0;
 
         return (block > 0);
     },
