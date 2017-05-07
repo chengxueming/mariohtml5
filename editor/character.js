@@ -46,6 +46,11 @@ Mario.Character = function() {
     this.NewLarge = false;
     this.NewFire = false;
     this.XPic = 5;
+    this.UnitHeight = 100;
+    this.UnitWidth = 100;
+
+    this.ScreenWidth = 16;
+    this.ScreenHeight = 16;
 };
 
 Mario.Character.prototype = new Mario.NotchSprite(null);

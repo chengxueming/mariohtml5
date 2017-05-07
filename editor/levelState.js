@@ -230,7 +230,7 @@ Editor.LevelState.prototype.DrawSprites = function(context,layer){
     context.save();
     myContext.Translate(-this.Camera.X, -this.Camera.Y);
     for (i = 0; i < this.Sprites.Objects.length; i++) {
-        if (this.Sprites.Objects[i].TileMapRenderer === layer) {
+        if (this.Sprites.Objects[i].Layer === layer) {
             this.Sprites.Objects[i].Draw(context, this.Camera);
         }
     }
