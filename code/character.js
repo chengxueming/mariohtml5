@@ -410,7 +410,7 @@ Mario.Character.prototype.SubMove = function(xa, ya) {
         }
         ya += 8;
     }
-    
+    //go down
     if (ya > 0) {
         if (this.IsBlocking(this.X + xa - this.Width, this.Y + ya, xa, 0)) {
             collide = true;
@@ -422,6 +422,7 @@ Mario.Character.prototype.SubMove = function(xa, ya) {
             collide = true;
         }
     }
+    //go up
     if (ya < 0) {
         if (this.IsBlocking(this.X + xa, this.Y + ya - this.Height, xa, ya)) {
             collide = true;

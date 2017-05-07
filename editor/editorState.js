@@ -35,18 +35,18 @@ Editor.EditorState.prototype.Update = function(delta) {
     this.DeathTime ++;
     this.TileMap.Update();
     Mario.MarioCharacter.Update(delta);
-    // if (Enjine.KeyboardInput.IsKeyDown(Enjine.Keys.Right)) {
-    // this.Camera.X += 16;
-    // }
-    // if (Enjine.KeyboardInput.IsKeyDown(Enjine.Keys.Up)) {
-    //     this.Camera.Y -= 16;
-    // }
-    // if (Enjine.KeyboardInput.IsKeyDown(Enjine.Keys.Down)) {
-    //     this.Camera.Y += 16;
-    // }
-    // if (Enjine.KeyboardInput.IsKeyDown(Enjine.Keys.Left)) {
-    //         this.Camera.X -= 16;
-    // }
+    if (Enjine.KeyboardInput.IsKeyDown(Enjine.Keys.Right)) {
+    this.Camera.X += 16;
+    }
+    if (Enjine.KeyboardInput.IsKeyDown(Enjine.Keys.Up)) {
+        this.Camera.Y -= 16;
+    }
+    if (Enjine.KeyboardInput.IsKeyDown(Enjine.Keys.Down)) {
+        this.Camera.Y += 16;
+    }
+    if (Enjine.KeyboardInput.IsKeyDown(Enjine.Keys.Left)) {
+            this.Camera.X -= 16;
+    }
 };
 
 Editor.EditorState.prototype.Draw = function(context) {

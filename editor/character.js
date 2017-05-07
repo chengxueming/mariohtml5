@@ -45,6 +45,7 @@ Mario.Character = function() {
     this.LastFire = false;
     this.NewLarge = false;
     this.NewFire = false;
+    this.XPic = 5;
 };
 
 Mario.Character.prototype = new Mario.NotchSprite(null);
@@ -123,13 +124,15 @@ Mario.Character.prototype.Blink = function(on) {
         }
         
         this.XPicO = 16;
-        this.YPicO = 31;
-        this.PicWidth = this.PicHeight = 32;
+        this.YPicO = 1;
+        this.PicWidth = 32;
+        this.PicHeight = 64;
     } else {
         this.Image = Enjine.Resources.Images["mario-1"];
         this.XPicO = 8;
-        this.YPicO = 15;
-        this.PicWidth = this.PicHeight = 16;
+        this.YPicO = 1;
+        this.PicWidth = 32
+        this.PicHeight = 32;
     }
 };
 
@@ -261,6 +264,7 @@ Mario.Character.prototype.Move = function() {
     this.CanShoot = !Enjine.KeyboardInput.IsKeyDown(Enjine.Keys.A);
     this.MayJump = (this.OnGround || this.Sliding) && !Enjine.KeyboardInput.IsKeyDown(Enjine.Keys.S);
     this.XFlip = (this.Facing === -1);
+    this.CalcPic();
     this.RunTime += Math.abs(this.Xa) + 5;
     
     if (Math.abs(this.Xa) < 0.5) {
@@ -348,7 +352,7 @@ Mario.Character.prototype.CalcPic = function() {
             } else if (Math.abs(this.Xa) > 10) {
                 runFrame = 7;
             } else {
-                runFrame = 6;
+                runFrame = 3;
             }
         }
     } else {
@@ -365,7 +369,7 @@ Mario.Character.prototype.CalcPic = function() {
             } else if (Math.abs(this.Xa) > 10) {
                 runFrame = 5;
             } else {
-                runFrame = 4;
+                runFrame = 2;
             }
         }
     }
@@ -384,14 +388,20 @@ Mario.Character.prototype.CalcPic = function() {
     
     if (this.Large) {
         if (this.Ducking) {
-            runFrame = 14;
+            runFrame = 7;
         }
         this.Height = this.Ducking ? 12 : 24;
     } else {
         this.Height = 12;
     }
+    if(this.XFlip == false){
+        this.XPic = 5;
+        this.YPic = runFrame;
+    }else{
+        this.XPic = 4;
+        this.YPic = 8 - runFrame;
+    }
     
-    this.XPic = runFrame;
 };
 
 Mario.Character.prototype.SubMove = function(xa, ya) {
@@ -529,9 +539,9 @@ Mario.Character.prototype.BackBorder = function (pos,width,type) {
     var res;
     if(type == -1)
     {
-        res = (((pos + 1) / width) | 0) * width;
+        res = (((pos + 1) / width) | 0) * width ;
     }else{
-        res = (((pos - 1) / width) | 0) * width;
+        res = (((pos - 1) / width) | 0) * width ;
     }
     return res;
 }
