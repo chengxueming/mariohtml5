@@ -15,7 +15,7 @@ Mario.Tile = {
     
     LoadBehaviors: function() {
         var b = {};
-        b[1] =  this.BlockAll;
+        b[1] = this.BlockAll;
         b[2] = this.BlockAll;
         b[3] = this.BlockAll;
         b[4] = this.BlockLower | this.Animated; 

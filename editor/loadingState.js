@@ -188,7 +188,7 @@ Editor.LoadingState.prototype.CheckForChange = function(context) {
         Mario.MarioCharacter = new Mario.Character();
         Mario.MarioCharacter.Image = Enjine.Resources.Images["smallMario"];
 		//set up the global map state variable
-        Editor.editor = new Editor.EditorState();
+        Editor.editor = new Editor.LevelState();
         context.ChangeState(Editor.editor);
     }
 };

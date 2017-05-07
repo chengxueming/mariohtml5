@@ -557,21 +557,21 @@ Mario.Character.prototype.IsBlocking = function(x, y, xa, ya) {
     
     block = this.World.TileMap.GetBlock(x, y);
     
-    // if (((Mario.Tile.Behaviors[block & 0xff]) & Mario.Tile.PickUpable) > 0) {
-    //     this.GetCoin();
-    //     Enjine.Resources.PlaySound("coin");
-    //     this.World.TileMap.SetBlock(x, y, 0);
-    //     for (xx = 0; xx < 2; xx++) {
-    //         for (yy = 0; yy < 2; yy++) {
-    //             this.World.AddSprite(new Mario.Sparkle(this.World, x * 16 + xx * 8 + ((Math.random() * 8) | 0), y * 16 + yy * 8 + ((Math.random() * 8) | 0), 0, 0, 0, 2, 5));
-    //         }
-    //     }
-    // }
+    if (((Mario.Tile.Behaviors[block & 0xff]) & Mario.Tile.PickUpable) > 0) {
+        this.GetCoin();
+        Enjine.Resources.PlaySound("coin");
+        this.World.TileMap.SetBlock(x, y, 0);
+        for (xx = 0; xx < 2; xx++) {
+            for (yy = 0; yy < 2; yy++) {
+                this.World.AddSprite(new Mario.Sparkle(this.World, x * 16 + xx * 8 + ((Math.random() * 8) | 0), y * 16 + yy * 8 + ((Math.random() * 8) | 0), 0, 0, 0, 2, 5));
+            }
+        }
+    }
     
     blocking = this.World.TileMap.IsBlocking(x, y, xa, ya);
-    // if (blocking && ya < 0) {
-    //     this.World.Bump(x, y, this.Large);
-    // }
+    if (blocking && ya < 0) {
+        this.World.Bump(x, y, this.Large);
+    }
     return blocking;
 };
 

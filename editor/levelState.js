@@ -1,77 +1,44 @@
 /**
-	State for actually playing a randomly generated level.
-	Code by Rob Kleffner, 2011
+    State for actually playing a randomly generated TileMap.
+    Code by Rob Kleffner, 2011
 */
 
-Editor.LevelState = function(type, level) {
-    this.LevelType = type;
-    this.Level = level;
-    this.Layer = null;
-    this.BgLayer = [];
-
-    this.Paused = false;
-    this.Sprites = null;
-    this.SpritesToAdd = null;
-    this.SpritesToRemove = null;
-    this.Camera = null;
-    this.ShellsToCheck = null;
-    this.FireballsToCheck = null;
-
+Editor.LevelState = function() {
     this.FontShadow = null;
     this.Font = null;
-
-    this.TimeLeft = 0;
-    this.StartTime = 0;
-    this.FireballsOnScreen = 0;
-    this.Tick = 0;
-
+    this.t = 0;
     this.Delta = 0;
-
-	this.GotoMapState = false;
-	this.GotoLoseState = false;
+    this.DeathTime = 1;
+    //locate left down
+    this.Camera = null;
+    this.Background = null;
+    this.TileMap = null;
+    this.TileMapRenderer = null;
+    this.Sprites = null;
 };
 
 Editor.LevelState.prototype = new Enjine.GameState();
 
 Editor.LevelState.prototype.Enter = function() {
-    //var levelGenerator = new Mario.LevelGenerator(320, 15), i = 0, scrollSpeed = 0, w = 0, h = 0, bgLevelGenerator = null;
-    //this.Level = levelGenerator.CreateLevel(this.LevelType, this.LevelDifficulty);
 
-    //play music here
-    this.Paused = false;
-    this.Layer = new Mario.LevelRenderer(this.Level, 320, 240);
+    Mario.MarioCharacter.Initialize(this);
+
+    this.Background = new Editor.Background(Enjine.Resources.Images["background2-1"],500,500);
+    this.Camera = new Enjine.Camera;
+    this.TileMap = new Mario.TileMap(20,15);
+    this.TileMapRenderer = new Mario.TileMapRenderer(this.TileMap,320,240);
     this.Sprites = new Enjine.DrawableManager();
-    this.Camera = new Enjine.Camera();
-    this.Tick = 0;
-
+    this.AddSprite(new Mario.Enemy(this,50,200,0,0,false));
     this.ShellsToCheck = [];
     this.FireballsToCheck = [];
     this.SpritesToAdd = [];
     this.SpritesToRemove = [];
 
-
-
-    Mario.MarioCharacter.Initialize(this);
-
     this.Sprites.Add(Mario.MarioCharacter);
-    this.StartTime = 1;
-    this.TimeLeft = 200;
-
-	this.GotoMapState = false;
-	this.GotoLoseState = false;
 };
 
 Editor.LevelState.prototype.Exit = function() {
 
-    delete this.Level;
-    delete this.Layer;
-    delete this.BgLayer;
-    delete this.Sprites;
-    delete this.Camera;
-    delete this.ShellsToCheck;
-    delete this.FireballsToCheck;
-    delete this.FontShadow;
-    delete this.Font;
 };
 
 Editor.LevelState.prototype.CheckShellCollide = function(shell) {
@@ -82,31 +49,32 @@ Editor.LevelState.prototype.CheckFireballCollide = function(fireball) {
     this.FireballsToCheck.push(fireball);
 };
 
-Editor.LevelState.prototype.Update = function(delta) {
-    var i = 0, j = 0, xd = 0, yd = 0, sprite = null, hasShotCannon = false, xCannon = 0, x = 0, y = 0,
-        dir = 0, st = null, b = 0;
-
-    this.Delta = delta;
-
-    this.TimeLeft -= delta;
-    if ((this.TimeLeft | 0) === 0) {
-        Mario.MarioCharacter.Die();
-    }
-
-    if (this.StartTime > 0) {
-        this.StartTime++;
-    }
-
+Editor.LevelState.prototype.UpdateCameraBefore = function(delta) {
     this.Camera.X = Mario.MarioCharacter.X - 160;
+    this.Camera.Y = Mario.MarioCharacter.Y - 120;
     if (this.Camera.X < 0) {
         this.Camera.X = 0;
     }
-    if (this.Camera.X > this.Level.Width * 16 - 320) {
-        this.Camera.X = this.Level.Width * 16 - 320;
+    if (this.Camera.X > this.TileMap.Width * 16 - 320) {
+        this.Camera.X = this.TileMap.Width * 16 - 320;
     }
+    if (this.Camera.Y < 0) {
+        this.Camera.Y = 0;
+    }
+    if (this.Camera.Y > this.TileMap.Height * 16 - 240) {
+        this.Camera.Y = this.TileMap.Height * 16 - 240;
+    }
+}
 
-    this.FireballsOnScreen = 0;
+Editor.LevelState.prototype.UpdateCameraAfter = function(delta) {
+    this.Camera.X = (Mario.MarioCharacter.XOld + (Mario.MarioCharacter.X - Mario.MarioCharacter.XOld) * delta) - 160;
+    this.Camera.Y = (Mario.MarioCharacter.YOld + (Mario.MarioCharacter.Y - Mario.MarioCharacter.YOld) * delta) - 120;
+}
 
+Editor.LevelState.prototype.UpdateGame = function(delta) {
+        this.FireballsOnScreen = 0;
+
+    //remove the sprites outsight
     for (i = 0; i < this.Sprites.Objects.length; i++) {
         sprite = this.Sprites.Objects[i];
         if (sprite !== Mario.MarioCharacter) {
@@ -131,25 +99,26 @@ Editor.LevelState.prototype.Update = function(delta) {
             }
         }
     } else {
-        this.Layer.Update(delta);
-        this.Level.Update();
+        this.TileMap.Update();
+        this.TileMapRenderer.Update(delta);
 
         hasShotCannon = false;
         xCannon = 0;
-		this.Tick++;
-
-        for (x = ((this.Camera.X / 16) | 0) - 1; x <= (((this.Camera.X + this.Layer.Width) / 16) | 0) + 1; x++) {
-            for (y = ((this.Camera.Y / 16) | 0) - 1; y <= (((this.Camera.Y + this.Layer.Height) / 16) | 0) + 1; y++) {
+        this.Tick++;
+        //update the sprites on map via tilemap spritetemplates
+        for (x = ((this.Camera.X / 16) | 0) - 1; x <= (((this.Camera.X + this.TileMapRenderer.Width) / 16) | 0) + 1; x++) {
+            for (y = ((this.Camera.Y / 16) | 0) - 1; y <= (((this.Camera.Y + this.TileMapRenderer.Height) / 16) | 0) + 1; y++) {
                 dir = 0;
-
+                //right of the mairo
                 if (x * 16 + 8 > Mario.MarioCharacter.X + 16) {
                     dir = -1;
                 }
+                //left of the mario 
                 if (x * 16 + 8 < Mario.MarioCharacter.X - 16) {
                     dir = 1;
                 }
 
-                st = this.Level.GetSpriteTemplate(x, y);
+                st = this.TileMap.GetSpriteTemplate(x, y);
 
                 if (st !== null) {
                     if (st.LastVisibleTick !== this.Tick - 1) {
@@ -162,7 +131,7 @@ Editor.LevelState.prototype.Update = function(delta) {
                 }
 
                 if (dir !== 0) {
-                    b = this.Level.GetBlock(x, y);
+                    b = this.TileMap.GetBlock(x, y);
                     if (((Mario.Tile.Behaviors[b & 0xff]) & Mario.Tile.Animated) > 0) {
                         if ((((b % 16) / 4) | 0) === 3 && ((b / 16) | 0) === 0) {
                             if ((this.Tick - x * 2) % 100 === 0) {
@@ -221,104 +190,54 @@ Editor.LevelState.prototype.Update = function(delta) {
     this.Sprites.AddRange(this.SpritesToAdd);
     this.Sprites.RemoveList(this.SpritesToRemove);
     this.SpritesToAdd.length = 0;
-    this.SpritesToRemove.length = 0;
+    this.SpritesToRemove.length = 0;    
+}
 
-    this.Camera.X = (Mario.MarioCharacter.XOld + (Mario.MarioCharacter.X - Mario.MarioCharacter.XOld) * delta) - 160;
-    this.Camera.Y = (Mario.MarioCharacter.YOld + (Mario.MarioCharacter.Y - Mario.MarioCharacter.YOld) * delta) - 120;
+
+Editor.LevelState.prototype.Update = function(delta) {
+    this.Delta = delta;
+    this.DeathTime ++;
+    Mario.MarioCharacter.Update(delta);
+    this.UpdateCameraBefore(delta);
+    this.UpdateGame(delta);
+    this.UpdateCameraAfter(delta);
+    // if (Enjine.KeyboardInput.IsKeyDown(Enjine.Keys.Right)) {
+    // this.Camera.X += 16;
+    // }
+    // if (Enjine.KeyboardInput.IsKeyDown(Enjine.Keys.Up)) {
+    //     this.Camera.Y -= 16;
+    // }
+    // if (Enjine.KeyboardInput.IsKeyDown(Enjine.Keys.Down)) {
+    //     this.Camera.Y += 16;
+    // }
+    // if (Enjine.KeyboardInput.IsKeyDown(Enjine.Keys.Left)) {
+    //         this.Camera.X -= 16;
+    // }
 };
 
 Editor.LevelState.prototype.Draw = function(context) {
-    var i = 0, time = 0, t = 0;
+    context.fillStyle = "rgb(0,0,0)";
+    context.fillRect(0,0,320,240);
+    this.UpdateCameraBefore();
+    this.Background.Draw(context,this.Camera);
+    this.DrawSprites(context,0);
+    this.TileMapRenderer.Draw(context,this.Camera);
+    this.DrawSprites(context,1);
+};
 
-    if (this.Camera.X < 0) {
-        this.Camera.X = 0;
-    }
-    if (this.Camera.Y < 0) {
-        this.Camera.Y = 0;
-    }
-    if (this.Camera.X > this.Level.Width * 16 - 320) {
-        this.Camera.X = this.Level.Width * 16 - 320;
-    }
-    if (this.Camera.Y > this.Level.Height * 16 - 240) {
-        this.Camera.Y = this.Level.Height * 16 - 240;
-    }
-
-    for (i = 0; i < 2; i++) {
-        this.BgLayer[i].Draw(context, this.Camera);
-    }
-
+Editor.LevelState.prototype.DrawSprites = function(context,layer){
+    var myContext = new Editor.Context(context,320,240);
     context.save();
-    context.translate(-this.Camera.X, -this.Camera.Y);
+    myContext.Translate(-this.Camera.X, -this.Camera.Y);
     for (i = 0; i < this.Sprites.Objects.length; i++) {
-        if (this.Sprites.Objects[i].Layer === 0) {
+        if (this.Sprites.Objects[i].TileMapRenderer === layer) {
             this.Sprites.Objects[i].Draw(context, this.Camera);
         }
     }
     context.restore();
+}
 
-    this.Layer.Draw(context, this.Camera);
-    this.Layer.DrawExit0(context, this.Camera, Mario.MarioCharacter.WinTime === 0);
-
-    context.save();
-    context.translate(-this.Camera.X, -this.Camera.Y);
-    for (i = 0; i < this.Sprites.Objects.length; i++) {
-        if (this.Sprites.Objects[i].Layer === 1) {
-            this.Sprites.Objects[i].Draw(context, this.Camera);
-        }
-    }
-    context.restore();
-
-    this.Layer.DrawExit1(context, this.Camera);
-
-    this.DrawStringShadow(context, "MARIO " + Mario.MarioCharacter.Lives, 0, 0);
-    this.DrawStringShadow(context, "00000000", 0, 1);
-    this.DrawStringShadow(context, "COIN", 14, 0);
-    this.DrawStringShadow(context, " " + Mario.MarioCharacter.Coins, 14, 1);
-    this.DrawStringShadow(context, "WORLD", 24, 0);
-    this.DrawStringShadow(context, " " + Mario.MarioCharacter.LevelString, 24, 1);
-    this.DrawStringShadow(context, "TIME", 34, 0);
-    time = this.TimeLeft | 0;
-    if (time < 0) {
-        time = 0;
-    }
-    this.DrawStringShadow(context, " " + time, 34, 1);
-
-    if (this.StartTime > 0) {
-        t = this.StartTime + this.Delta - 2;
-        t = t * t * 0.6;
-        this.RenderBlackout(context, 160, 120, t | 0);
-    }
-
-    if (Mario.MarioCharacter.WinTime > 0) {
-    	Mario.StopMusic();
-        t = Mario.MarioCharacter.WinTime + this.Delta;
-        t = t * t * 0.2;
-
-        if (t > 900) {
-            //TODO: goto map state with level won
-			Mario.GlobalMapState.LevelWon();
-			this.GotoMapState = true;
-        }
-
-        this.RenderBlackout(context, ((Mario.MarioCharacter.XDeathPos - this.Camera.X) | 0), ((Mario.MarioCharacter.YDeathPos - this.Camera.Y) | 0), (320 - t) | 0);
-    }
-
-    if (Mario.MarioCharacter.DeathTime > 0) {
-    	Mario.StopMusic();
-        t = Mario.MarioCharacter.DeathTime + this.Delta;
-        t = t * t * 0.1;
-
-        if (t > 900) {
-            //TODO: goto map with level lost
-			Mario.MarioCharacter.Lives--;
-			this.GotoMapState = true;
-			if (Mario.MarioCharacter.Lives <= 0) {
-				this.GotoLoseState = true;
-			}
-        }
-
-        this.RenderBlackout(context, ((Mario.MarioCharacter.XDeathPos - this.Camera.X) | 0), ((Mario.MarioCharacter.YDeathPos - this.Camera.Y) | 0), (320 - t) | 0);
-    }
+Editor.LevelState.prototype.CheckForChange = function(context) {
 };
 
 Editor.LevelState.prototype.AddSprite = function(sprite) {
@@ -330,12 +249,12 @@ Editor.LevelState.prototype.RemoveSprite = function(sprite) {
 };
 
 Editor.LevelState.prototype.Bump = function(x, y, canBreakBricks) {
-    var block = this.Level.GetBlock(x, y), xx = 0, yy = 0;
+    var block = this.TileMap.GetBlock(x, y), xx = 0, yy = 0;
 
     if ((Mario.Tile.Behaviors[block & 0xff] & Mario.Tile.Bumpable) > 0) {
         this.BumpInto(x, y - 1);
-        this.Level.SetBlock(x, y, 4);
-        this.Level.SetBlockData(x, y, 4);
+        this.TileMap.SetBlock(x, y, 4);
+        this.TileMap.SetBlockData(x, y, 4);
 
         if ((Mario.Tile.Behaviors[block & 0xff] & Mario.Tile.Special) > 0) {
             Enjine.Resources.PlaySound("sprout");
@@ -355,7 +274,7 @@ Editor.LevelState.prototype.Bump = function(x, y, canBreakBricks) {
         this.BumpInto(x, y - 1);
         if (canBreakBricks) {
             Enjine.Resources.PlaySound("breakblock");
-            this.Level.SetBlock(x, y, 0);
+            this.TileMap.SetBlock(x, y, 0);
             for (xx = 0; xx < 2; xx++) {
                 for (yy = 0; yy < 2; yy++) {
                     this.AddSprite(new Mario.Particle(this, x * 16 + xx * 8 + 4, y * 16 + yy * 8 + 4, (xx * 2 - 1) * 4, (yy * 2 - 1) * 4 - 8));
@@ -366,26 +285,15 @@ Editor.LevelState.prototype.Bump = function(x, y, canBreakBricks) {
 };
 
 Editor.LevelState.prototype.BumpInto = function(x, y) {
-    var block = this.Level.GetBlock(x, y), i = 0;
+    var block = this.TileMap.GetBlock(x, y), i = 0;
     if (((Mario.Tile.Behaviors[block & 0xff]) & Mario.Tile.PickUpable) > 0) {
         Mario.MarioCharacter.GetCoin();
         Enjine.Resources.PlaySound("coin");
-        this.Level.SetBlock(x, y, 0);
+        this.TileMap.SetBlock(x, y, 0);
         this.AddSprite(new Mario.CoinAnim(x, y + 1));
     }
 
     for (i = 0; i < this.Sprites.Objects.length; i++) {
         this.Sprites.Objects[i].BumpCheck(x, y);
     }
-};
-
-Editor.LevelState.prototype.CheckForChange = function(context) {
-	if (this.GotoLoseState) {
-		context.ChangeState(new Mario.LoseState());
-	}
-	else {
-		if (this.GotoMapState) {
-			context.ChangeState(Mario.GlobalMapState);
-		}
-	}
 };
