@@ -25,7 +25,7 @@ Editor.LevelState.prototype.Enter = function() {
 
     this.Background = new Editor.Background(Enjine.Resources.Images["background2-1"],500,500);
     this.Camera = new Enjine.Camera;
-    this.TileMap = new Mario.TileMap(20,15);
+    this.TileMap = new Mario.TileMap(40,15);
     this.TileMapRenderer = new Mario.TileMapRenderer(this.TileMap,320,240);
     this.Sprites = new Enjine.DrawableManager();
     this.AddSprite(new Mario.Enemy(this,50,200,0,0,false));
@@ -230,7 +230,7 @@ Editor.LevelState.prototype.DrawSprites = function(context,layer){
     context.save();
     myContext.Translate(-this.Camera.X, -this.Camera.Y);
     for (i = 0; i < this.Sprites.Objects.length; i++) {
-        if (this.Sprites.Objects[i].TileMapRenderer === layer) {
+        if (this.Sprites.Objects[i].Layer === layer) {
             this.Sprites.Objects[i].Draw(context, this.Camera);
         }
     }

@@ -52,6 +52,9 @@ Mario.TileMap = function(width, height) {
         this.Map[x][1] = 2;
         this.Map[x][2] = 3;
         this.Map[x][3] = 4;
+        if(x > 4) {
+            this.Map[x][x] = 4;
+        }
     }
 };
 
@@ -99,32 +102,32 @@ Mario.TileMap.prototype = {
         this.Animate %= 4;
     },
 
-    Draw: function(context,camera) {
-        var myContext = new Editor.Context(context,320,240);
-        var x = 0, y = 0, b = 0, frame = null, xTileStart = (camera.X / 16) | 0, xTileEnd = ((camera.X + this.Width*16) / 16) | 0;
-        if(xTileEnd + 1 > this.Width)
-        {
-            xTileEnd = this.Width - 1;
-        }
-        context.save();
-        myContext.Translate(-camera.X,-camera.Y);
-        for (x = xTileStart; x < xTileEnd + 1; x++) {
-            for (y = 0; y < this.Height; y++) {
-                b = this.GetBlock(x, y);
-                if(b == 0){
-                    continue;
-                }
-                var block = "block-"+b;
-                if(Enjine.Resources.Images[block].height == 32)
-                {
-                    myContext.DrawImage(Enjine.Resources.Images[block], ((x << 4)) | 0, (y << 4) | 0 ,16 ,16);
-                }else{
-                    myContext.DrawAnimation(Enjine.Resources.Images[block], ((x << 4)) | 0, (y << 4) | 0 ,16 ,16,this.Animate,4);
-                }
-            }
-        }
-        context.restore();
-    },
+    // Draw: function(context,camera) {
+    //     var myContext = new Editor.Context(context,320,240);
+    //     var x = 0, y = 0, b = 0, frame = null, xTileStart = (camera.X / 16) | 0, xTileEnd = ((camera.X + this.Width*16) / 16) | 0;
+    //     if(xTileEnd + 1 > this.Width)
+    //     {
+    //         xTileEnd = this.Width - 1;
+    //     }
+    //     context.save();
+    //     myContext.Translate(-camera.X,-camera.Y);
+    //     for (x = xTileStart; x < xTileEnd + 1; x++) {
+    //         for (y = 0; y < this.Height; y++) {
+    //             b = this.GetBlock(x, y);
+    //             if(b == 0){
+    //                 continue;
+    //             }
+    //             var block = "block-"+b;
+    //             if(Enjine.Resources.Images[block].height == 32)
+    //             {
+    //                 myContext.DrawImage(Enjine.Resources.Images[block], ((x << 4)) | 0, (y << 4) | 0 ,16 ,16);
+    //             }else{
+    //                 myContext.DrawAnimation(Enjine.Resources.Images[block], ((x << 4)) | 0, (y << 4) | 0 ,16 ,16,this.Animate,4);
+    //             }
+    //         }
+    //     }
+    //     context.restore();
+    // },
     
     GetBlockCapped: function(x, y) {
         if (x < 0) { x = 0; }
