@@ -85,6 +85,18 @@ Mario.Enemy.prototype.CollideCheck = function() {
     }
 };
 
+Mario.Enemy.prototype.BackBorder = function (pos,width,type) {
+    // body...
+    var res;
+    if(type == -1)
+    {
+        res = (((pos + 1) / width) | 0) * width ;
+    }else{
+        res = (((pos - 1) / width) | 0) * width ;
+    }
+    return res;
+};
+
 Mario.Enemy.prototype.Move = function() {
     var i = 0, sideWaysSpeed = 1.75, runFrame = 0;
 
@@ -145,12 +157,12 @@ Mario.Enemy.prototype.Move = function() {
     
     if (!this.OnGround) {
         if (this.Winged) {
-            this.Ya += 0.6;
+            this.Ya -= 0.6;
         } else {
-            this.Ya += 2;
+            this.Ya -= 2;
         }
     } else if (this.Winged) {
-        this.Ya = -10;
+        this.Ya = 10;
     }
     
     if (this.Winged) {
@@ -192,75 +204,80 @@ Mario.Enemy.prototype.SubMove = function(xa, ya) {
         }
         ya += 8;
     }
-    
+
+    //go up
     if (ya > 0) {
-        if (this.IsBlocking(this.X + xa - this.Width, this.Y + ya, xa, 0)) {
+        if (this.IsBlocking(this.X + xa - this.Width, this.Y + ya + this.Height, xa, 0)) {
             collide = true;
-        } else if (this.IsBlocking(this.X + xa + this.Width, this.Y + ya, xa, 0)) {
+        } else if (this.IsBlocking(this.X + xa + this.Width, this.Y + ya + this.Height, xa, 0)) {
             collide = true;
-        } else if (this.IsBlocking(this.X + xa - this.Width, this.Y + ya + 1, xa, ya)) {
+        } else if (this.IsBlocking(this.X + xa - this.Width, this.Y + ya - 1 + this.Height, xa, ya)) {
             collide = true;
-        } else if (this.IsBlocking(this.X + xa + this.Width, this.Y + ya + 1, xa, ya)) {
+        } else if (this.IsBlocking(this.X + xa + this.Width, this.Y + ya - 1 + this.Height, xa, ya)) {
             collide = true;
         }
     }
+    //go down
     if (ya < 0) {
-        if (this.IsBlocking(this.X + xa, this.Y + ya - this.Height, xa, ya)) {
+        if (this.IsBlocking(this.X + xa, this.Y + ya, xa, ya)) {
             collide = true;
-        } else if (collide || this.IsBlocking(this.X + xa - this.Width, this.Y + ya - this.Height, xa, ya)) {
+        } else if (collide || this.IsBlocking(this.X + xa - this.Width, this.Y + ya, xa, ya)) {
             collide = true;
-        } else if (collide || this.IsBlocking(this.X + xa + this.Width, this.Y + ya - this.Height, xa, ya)) {
+        } else if (collide || this.IsBlocking(this.X + xa + this.Width, this.Y + ya, xa, ya)) {
             collide = true;
         }
     }
     
     if (xa > 0) {
-        if (this.IsBlocking(this.X + xa + this.Width, this.Y + ya - this.Height, xa, ya)) {
+        if (this.IsBlocking(this.X + xa + this.Width, this.Y + ya + this.Height, xa, ya)) {
             collide = true;
         }
-        if (this.IsBlocking(this.X + xa + this.Width, this.Y + ya - ((this.Height / 2) | 0), xa, ya)) {
-            collide = true;
-        }
+        
+        if (this.IsBlocking(this.X + xa + this.Width, this.Y + ya + ((this.Height / 2) | 0), xa, ya)) {
+            collide = true
+        } 
+        
         if (this.IsBlocking(this.X + xa + this.Width, this.Y + ya, xa, ya)) {
             collide = true;
-        }
-        
-        if (this.AvoidCliffs && this.OnGround && !this.World.TileMap.IsBlocking(((this.X + this.Xa + this.Width) / 16) | 0, ((this.Y / 16) + 1) | 0, this.Xa, 1)) {
-            collide = true;
-        }
+        } 
     }
     if (xa < 0) {
-        if (this.IsBlocking(this.X + xa - this.Width, this.Y + ya - this.Height, xa, ya)) {
+        if (this.IsBlocking(this.X + xa - this.Width, this.Y + ya + this.Height, xa, ya)) {
             collide = true;
-        }
-        if (this.IsBlocking(this.X + xa - this.Width, this.Y + ya - ((this.Height / 2) | 0), xa, ya)) {
+        } 
+        
+        if (this.IsBlocking(this.X + xa - this.Width, this.Y + ya + ((this.Height / 2) | 0), xa, ya)) {
             collide = true;
-        }
+        }         
         if (this.IsBlocking(this.X + xa - this.Width, this.Y + ya, xa, ya)) {
             collide = true;
-        }
-        
-        if (this.AvoidCliffs && this.OnGround && !this.World.TileMap.IsBlocking(((this.X + this.Xa - this.Width) / 16) | 0, ((this.Y / 16) + 1) | 0, this.Xa, 1)) {
-            collide = true;
-        }
+        } 
     }
     
     if (collide) {
+        //go left
         if (xa < 0) {
-            this.X = (((this.X - this.Width) / 16) | 0) * 16 + this.Width;
+            this.X = this.BackBorder(this.X - this.Width,16,-1);
+            //this.X = (((this.X - this.Width) / 16) | 0) * 16 + this.Width;
             this.Xa = 0;
         }
+        //go right
         if (xa > 0) {
-            this.X = (((this.X + this.Width) / 16 + 1) | 0) * 16 - this.Width - 1;
+            this.X = this.BackBorder(this.X + this.Width,16,1);
+            //this.X = (((this.X + this.Width) / 16 + 1) | 0) * 16 - this.Width - 1;
             this.Xa = 0;
         }
-        if (ya < 0) {
-            this.Y = (((this.Y - this.Height) / 16) | 0) * 16 + this.Height;
+        //go up
+        if (ya > 0) {
+            this.Y = this.BackBorder(this.Y + this.Height,16,1);
+            //this.Y = (((this.Y + this.Height) / 16) | 0) * 16 + this.Height;
             this.JumpTime = 0;
             this.Ya = 0;
         }
-        if (ya > 0) {
-            this.Y = (((this.Y - 1) / 16 + 1) | 0) * 16 - 1;
+        //go down
+        if (ya < 0) {
+            this.Y = this.BackBorder(this.Y,16,-1);
+            //this.Y = (((this.Y + 1) / 16 ) | 0) * 16 + 1;
             this.OnGround = true;
         }
         
