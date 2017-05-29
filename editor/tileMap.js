@@ -18,7 +18,8 @@ Mario.Tile = {
         b[1] = this.BlockAll;
         b[2] = this.BlockAll;
         b[3] = this.BlockAll;
-        b[4] = this.BlockLower | this.Animated; 
+        //b[4] = this.BlockLower | this.Animated; 
+        b[4] = this.BlockAll | this.Animated;;
         this.Behaviors = b;
     }
 };
@@ -56,6 +57,9 @@ Mario.TileMap = function(width, height) {
             this.Map[x][x] = 4;
         }
     }
+    this.Map[10][4] = 4;
+    this.Map[20][4] = 3;
+    this.Map[2][4] = 4;
 };
 
 Mario.TileMap.prototype = {

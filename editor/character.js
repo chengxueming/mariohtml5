@@ -26,7 +26,7 @@ Mario.Character = function() {
     this.CanShoot = false;
     
     this.Width = 4;
-    this.Height = 24;
+    this.Height = 15;
     
     //TileMap scene
     this.World = null;
@@ -73,8 +73,6 @@ Mario.Character.prototype.Initialize = function(world) {
     this.YJumpSpeed = 0;
     this.CanShoot = false;
     
-    this.Width = 4;
-    this.Height = 24;
     
     //TileMap scene
     this.World = world;
@@ -409,7 +407,7 @@ Mario.Character.prototype.CalcPic = function() {
     
 };
 
-Mario.Character.prototype.SubMove = function(xa, ya) {
+Mario.Character.prototype.SubMove = function(xMovea, ya) {
     var collide = false;
     
     while (xa > 8) {
@@ -443,10 +441,6 @@ Mario.Character.prototype.SubMove = function(xa, ya) {
             collide = true;
         } else if (this.IsBlocking(this.X + xa + this.Width, this.Y + ya + this.Height, xa, 0)) {
             collide = true;
-        } else if (this.IsBlocking(this.X + xa - this.Width, this.Y + ya - 1 + this.Height, xa, ya)) {
-            collide = true;
-        } else if (this.IsBlocking(this.X + xa + this.Width, this.Y + ya - 1 + this.Height, xa, ya)) {
-            collide = true;
         }
     }
     //go down
@@ -456,6 +450,10 @@ Mario.Character.prototype.SubMove = function(xa, ya) {
         } else if (collide || this.IsBlocking(this.X + xa - this.Width, this.Y + ya, xa, ya)) {
             collide = true;
         } else if (collide || this.IsBlocking(this.X + xa + this.Width, this.Y + ya, xa, ya)) {
+            collide = true;
+        } else if (collide || this.IsBlocking(this.X + xa - this.Width, this.Y + ya - this.YPicO, xa, ya)) {
+            collide = true;
+        } else if (collide || this.IsBlocking(this.X + xa + this.Width, this.Y + ya - this.YPicO, xa, ya)) {
             collide = true;
         }
     }
@@ -504,26 +502,26 @@ Mario.Character.prototype.SubMove = function(xa, ya) {
     if (collide) {
         //go left
         if (xa < 0) {
-            this.X = this.BackBorder(this.X - this.Width,16,-1);
+            this.X = this.BackBorder(this.X - this.Width,16,-1) + this.Width;
             //this.X = (((this.X - this.Width) / 16) | 0) * 16 + this.Width;
             this.Xa = 0;
         }
         //go right
         if (xa > 0) {
-            this.X = this.BackBorder(this.X + this.Width,16,1);
+            this.X = this.BackBorder(this.X + this.Width,16,1) - this.Width;
             //this.X = (((this.X + this.Width) / 16 + 1) | 0) * 16 - this.Width - 1;
             this.Xa = 0;
         }
         //go up
         if (ya > 0) {
-            this.Y = this.BackBorder(this.Y + this.Height,16,1);
+            this.Y = this.BackBorder(this.Y + this.Height,16,1) - this.Height;
             //this.Y = (((this.Y + this.Height) / 16) | 0) * 16 + this.Height;
             this.JumpTime = 0;
             this.Ya = 0;
         }
         //go down
         if (ya < 0) {
-            this.Y = this.BackBorder(this.Y,16,-1);
+            this.Y = this.BackBorder(this.Y - this.YPicO,16,-1) + this.YPicO;
             //this.Y = (((this.Y + 1) / 16 ) | 0) * 16 + 1;
             this.OnGround = true;
         }
@@ -542,11 +540,11 @@ type 1 up or right return less 1 than border
 Mario.Character.prototype.BackBorder = function (pos,width,type) {
     // body...
     var res;
-    if(type == -1)
+    if(type == 1)
     {
-        res = (((pos + 1) / width) | 0) * width ;
+        res = (((pos - 1) / width) | 0) * width + width;
     }else{
-        res = (((pos - 1) / width) | 0) * width ;
+        res = (((pos + 1) / width) | 0) * width ;
     }
     return res;
 }

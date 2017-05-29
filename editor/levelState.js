@@ -15,7 +15,7 @@ Editor.LevelState = function() {
     this.TileMap = null;
     this.TileMapRenderer = null;
     this.Sprites = null;
-};
+}; 
 
 Editor.LevelState.prototype = new Enjine.GameState();
 
@@ -28,7 +28,7 @@ Editor.LevelState.prototype.Enter = function() {
     this.TileMap = new Mario.TileMap(40,15);
     this.TileMapRenderer = new Mario.TileMapRenderer(this.TileMap,320,240);
     this.Sprites = new Enjine.DrawableManager();
-    this.AddSprite(new Mario.Enemy(this,50,200,0,0,false));
+    //this.AddSprite(new Mario.Enemy(this,50,200,0,0,false));
     this.ShellsToCheck = [];
     this.FireballsToCheck = [];
     this.SpritesToAdd = [];
@@ -197,7 +197,8 @@ Editor.LevelState.prototype.UpdateGame = function(delta) {
 Editor.LevelState.prototype.Update = function(delta) {
     this.Delta = delta;
     this.DeathTime ++;
-    Mario.MarioCharacter.Update(delta);
+    //Mario.MarioCharacter.Update(delta);
+    console.log(delta);
     this.UpdateCameraBefore(delta);
     this.UpdateGame(delta);
     this.UpdateCameraAfter(delta);
