@@ -17,9 +17,11 @@ Mario.Tile = {
         var b = {};
         b[1] = this.BlockAll;
         b[2] = this.BlockAll;
-        b[3] = this.BlockAll;
+        b[3] = this.BlockUpper;
         //b[4] = this.BlockLower | this.Animated; 
         b[4] = this.BlockAll | this.Animated;;
+        b[81] = this.BlockUpper;
+
         this.Behaviors = b;
     }
 };
@@ -53,13 +55,22 @@ Mario.TileMap = function(width, height) {
         this.Map[x][1] = 2;
         this.Map[x][2] = 3;
         this.Map[x][3] = 4;
-        if(x > 4) {
+/*        if(x > 4) {
             this.Map[x][x] = 4;
-        }
+        }*/
     }
     this.Map[10][4] = 4;
-    this.Map[20][4] = 3;
-    this.Map[2][4] = 4;
+    this.Map[19][5] = 87;
+    this.Map[19][6] = 81;
+    this.Map[20][5] = 87;
+    this.Map[20][6] = 81;
+
+    this.Map[2][5] = 4;
+    this.Map[2][6] = 4;
+    this.Map[3][5] = 4;
+    this.Map[3][6] = 4;
+
+    //this.Map[2][4] = 4;
 };
 
 Mario.TileMap.prototype = {
@@ -172,10 +183,10 @@ Mario.TileMap.prototype = {
     IsBlocking: function(x, y, xa, ya) {
         var block = this.GetBlock(x, y);
         var blocking = ((Mario.Tile.Behaviors[block & 0xff]) & Mario.Tile.BlockAll) > 0;
-        blocking |= (ya > 0) && ((Mario.Tile.Behaviors[block & 0xff]) & Mario.Tile.BlockUpper) > 0;
-        blocking |= (ya < 0) && ((Mario.Tile.Behaviors[block & 0xff]) & Mario.Tile.BlockLower) > 0;
+        blocking |= (ya < 0) && ((Mario.Tile.Behaviors[block & 0xff]) & Mario.Tile.BlockUpper) > 0;
+        blocking |= (ya > 0) && ((Mario.Tile.Behaviors[block & 0xff]) & Mario.Tile.BlockLower) > 0;
 
-        return (block > 0);
+        return blocking;
     },
     
     GetSpriteTemplate: function(x, y) {

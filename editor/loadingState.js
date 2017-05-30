@@ -107,24 +107,26 @@ Editor.LoadingState.prototype.Enter = function() {
 };
 
 
-Editor.LoadingState.prototype.LoadResource = function() {
-    // body...
-    var path = "graphics/block/";
-    var files = [
-    "block-1",
-    "block-2",
-    "block-3",
-    "block-4",
-    "block-5",
-    "block-6",
-    ];
-    var imgs = [];
-    for (var i = 0; i < files.length; i++) {
-        var img = {"name":files[i],"src":path+files[i]+".png"};
-        imgs.push(img);
-    };
-    Enjine.Resources.AddImages(imgs);
-};
+// Editor.LoadingState.prototype.LoadResource = function() {
+//     // body...
+//     var path = "graphics/block/";
+//     var files = [
+//     "block-1",
+//     "block-2",
+//     "block-3",
+//     "block-4",
+//     "block-5",
+//     "block-6",
+//     "block-81",
+//     "block-87",
+//     ];
+//     var imgs = [];
+//     for (var i = 0; i < files.length; i++) {
+//         var img = {"name":files[i],"src":path+files[i]+".png"};
+//         imgs.push(img);
+//     };
+//     Enjine.Resources.AddImages(imgs);
+// };
 
 Editor.LoadingState.prototype.LoadSmbxResource = function(type) {
     // body...
@@ -136,6 +138,8 @@ Editor.LoadingState.prototype.LoadSmbxResource = function(type) {
     "4",
     "5",
     "6",
+    "81",
+    "87"
     ];
     var imgs = [];
     for (var i = 0; i < files.length; i++) {

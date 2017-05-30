@@ -407,7 +407,7 @@ Mario.Character.prototype.CalcPic = function() {
     
 };
 
-Mario.Character.prototype.SubMove = function(xMovea, ya) {
+Mario.Character.prototype.SubMove = function(xa, ya) {
     var collide = false;
     
     while (xa > 8) {
@@ -508,7 +508,7 @@ Mario.Character.prototype.SubMove = function(xMovea, ya) {
         }
         //go right
         if (xa > 0) {
-            this.X = this.BackBorder(this.X + this.Width,16,1) - this.Width;
+            this.X = this.BackBorder(this.X + this.Width,16,1) - this.Width - 1;
             //this.X = (((this.X + this.Width) / 16 + 1) | 0) * 16 - this.Width - 1;
             this.Xa = 0;
         }

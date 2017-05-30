@@ -94,7 +94,8 @@ Mario.TileMapRenderer.prototype.DrawDynamic = function(context, camera) {
             b = this.tileMap.GetBlock(x, y);  
             if (((Mario.Tile.Behaviors[b & 0xff]) & Mario.Tile.Animated) > 0) {
                 animTime = ((this.Bounce / 3) | 0) % 4;
-                if ((((b % 16) / 4) | 0) === 0 && ((b / 16) | 0) === 1) {
+                //if ((((b % 16) / 4) | 0) === 0 && ((b / 16) | 0) === 1) {
+                if (4 == b) {
                     animTime = ((this.Bounce / 2 + (x + y) / 8) | 0) % 20;
                     if (animTime > 3) {
                         animTime = 0;

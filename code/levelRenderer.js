@@ -55,12 +55,14 @@ Mario.LevelRenderer.prototype.DrawDynamic = function(context, camera) {
             
             if (((Mario.Tile.Behaviors[b & 0xff]) & Mario.Tile.Animated) > 0) {
                 animTime = ((this.Bounce / 3) | 0) % 4;
+                //金砖的（16,17,18,19）规则闪烁
                 if ((((b % 16) / 4) | 0) === 0 && ((b / 16) | 0) === 1) {
                     animTime = ((this.Bounce / 2 + (x + y) / 8) | 0) % 20;
                     if (animTime > 3) {
                         animTime = 0;
                     }
                 }
+                //12,13,14,15无动画（anmaltime为2）
                 if ((((b % 16) / 4) | 0) === 3 && ((b / 16) | 0) === 0) {
                     animTime = 2;
                 }
