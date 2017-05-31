@@ -23,9 +23,9 @@ Editor.LevelState.prototype.Enter = function() {
 
     Mario.MarioCharacter.Initialize(this);
 
-    this.Background = new Editor.Background(Enjine.Resources.Images["background2-1"],500,500);
+    this.Background = new Editor.Background(Enjine.Resources.Images["background2-1"],960,720);
     this.Camera = new Enjine.Camera;
-    this.TileMap = new Mario.TileMap(40,15);
+    this.TileMap = new Mario.TileMap(60,45);
     this.TileMapRenderer = new Mario.TileMapRenderer(this.TileMap,320,240);
     this.Sprites = new Enjine.DrawableManager();
     //this.AddSprite(new Mario.Enemy(this,50,200,0,0,false));
