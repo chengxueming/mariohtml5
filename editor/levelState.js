@@ -198,7 +198,6 @@ Editor.LevelState.prototype.Update = function(delta) {
     this.Delta = delta;
     this.DeathTime ++;
     //Mario.MarioCharacter.Update(delta);
-    console.log(delta);
     this.UpdateCameraBefore(delta);
     this.UpdateGame(delta);
     this.UpdateCameraAfter(delta);
@@ -278,7 +277,8 @@ Editor.LevelState.prototype.Bump = function(x, y, canBreakBricks) {
             this.TileMap.SetBlock(x, y, 0);
             for (xx = 0; xx < 2; xx++) {
                 for (yy = 0; yy < 2; yy++) {
-                    this.AddSprite(new Mario.Particle(this, x * 16 + xx * 8 + 4, y * 16 + yy * 8 + 4, (xx * 2 - 1) * 4, (yy * 2 - 1) * 4 - 8));
+                    //生成4个左右对称的粒子 一高一低 先上升 后下降
+                    this.AddSprite(new Mario.Particle(this, x * 16 + xx * 8 + 4, y * 16 + yy * 8 + 4, (xx * 2 - 1) * 4, (yy * 2 - 1) * 4 + 8));
                 }
             }
         }

@@ -146,6 +146,10 @@ Editor.LoadingState.prototype.LoadSmbxResource = function(type) {
         var img = {"name":type+"-"+files[i],"src":path+type+"-"+files[i]+".png"};
         imgs.push(img);
     };
+    for (i = 7; i <= 20; i++) {
+        var img = {"name":type+"-"+i,"src":path+type+"-"+i+".png"};
+        imgs.push(img);
+    };
     Enjine.Resources.AddImages(imgs);
 };
 

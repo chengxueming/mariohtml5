@@ -15,7 +15,6 @@ Editor.Background = function(Img, width, height) {
 Editor.Background.prototype = new Enjine.Drawable();
 
 Editor.Background.prototype.Draw = function(context, camera) {
-    console.log(camera);
     var myContext = new Editor.Context(context,320,240);
     context.save();
     myContext.Translate(-camera.X,-camera.Y);

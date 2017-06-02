@@ -16,12 +16,6 @@ Mario.NotchSprite = function(image) {
     this.Image = image;
     this.Delta = 0;
     this.Tick = 0;
-    //在图片上的偏移 mario 是100 敌人是紧凑
-    this.UnitWidth = this.PicWidth;
-    this.UnitHeight = this.PicHeight;
-    //用来显示的宽高 mario 
-    this.ScreenWidth = 16;
-    this.ScreenHeight = 16;
     this.SpriteTemplate = null;
     this.Layer = 1;
 };
@@ -45,7 +39,7 @@ Mario.NotchSprite.prototype.Draw = function(context, camera) {
     //myContext.DrawClipImage(this.Image,this.XFlip ? (320 - xPixel - this.PicWidth) : xPixel,this.YFlip ? (240 - yPixel - this.PicHeight) : yPixel
     //    ,this.PicWidth, this.PicHeight,this.XPic * this.PicWidth, this.YPic * this.PicHeight, this.PicWidth, this.PicHeight);
 myContext.DrawClipImage(this.Image,xPixel,yPixel
-        ,this.ScreenWidth, this.ScreenHeight,this.XPic * this.UnitWidth, this.YPic * this.UnitHeight, this.PicWidth, this.PicHeight);
+        ,this.PicWidth , this.PicHeight ,this.XPic * this.PicWidth, this.YPic * this.PicHeight, this.PicWidth, this.PicHeight);
     context.restore();
 };
 

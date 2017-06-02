@@ -32,5 +32,5 @@ Mario.Particle.prototype.Move = function() {
 	this.X += this.Xa;
 	this.Y += this.Ya;
 	this.Ya *= 0.95;
-	this.Ya += 3;
+	this.Ya -= 3;
 };

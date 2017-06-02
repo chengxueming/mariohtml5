@@ -46,8 +46,12 @@ Mario.Character = function() {
     this.NewLarge = false;
     this.NewFire = false;
     this.XPic = 5;
+    //在图片上的偏移 mario 是100 敌人是紧凑
     this.UnitHeight = 100;
     this.UnitWidth = 100;
+    //用来显示的宽高 mario 
+    this.ScreenWidth = 16;
+    this.ScreenHeight = 16;
 
     this.ScreenWidth = 16;
     this.ScreenHeight = 16;
@@ -87,7 +91,7 @@ Mario.Character.prototype.Initialize = function(world) {
     //Sprite
     this.Carried = null;
     
-    this.SetLarge(this.Large, this.Fire);
+    this.SetLarge(true, this.Fire);
 };
 
 Mario.Character.prototype.SetPosition = function(X,Y) {
@@ -437,9 +441,9 @@ Mario.Character.prototype.SubMove = function(xa, ya) {
 
     //go up
     if (ya > 0) {
-        if (this.IsBlocking(this.X + xa - this.Width, this.Y + ya + this.Height, xa, 0)) {
+        if (this.IsBlocking(this.X + xa - this.Width, this.Y + ya + this.Height, xa, ya)) {
             collide = true;
-        } else if (this.IsBlocking(this.X + xa + this.Width, this.Y + ya + this.Height, xa, 0)) {
+        } else if (this.IsBlocking(this.X + xa + this.Width, this.Y + ya + this.Height, xa, ya)) {
             collide = true;
         }
     }
@@ -447,9 +451,9 @@ Mario.Character.prototype.SubMove = function(xa, ya) {
     if (ya < 0) {
         if (this.IsBlocking(this.X + xa, this.Y + ya, xa, ya)) {
             collide = true;
-        } else if (collide || this.IsBlocking(this.X + xa - this.Width, this.Y + ya, xa, ya)) {
+        } else if (collide || this.IsBlocking(this.X + xa - this.Width, this.Y + ya, xa, 0)) {
             collide = true;
-        } else if (collide || this.IsBlocking(this.X + xa + this.Width, this.Y + ya, xa, ya)) {
+        } else if (collide || this.IsBlocking(this.X + xa + this.Width, this.Y + ya, xa, 0)) {
             collide = true;
         } else if (collide || this.IsBlocking(this.X + xa - this.Width, this.Y + ya - this.YPicO, xa, ya)) {
             collide = true;
@@ -560,6 +564,7 @@ Mario.Character.prototype.IsBlocking = function(x, y, xa, ya) {
     
     block = this.World.TileMap.GetBlock(x, y);
     
+    //对于金币 蘑菇 花等物品 一接触就获得
     if (((Mario.Tile.Behaviors[block & 0xff]) & Mario.Tile.PickUpable) > 0) {
         this.GetCoin();
         Enjine.Resources.PlaySound("coin");
@@ -572,11 +577,34 @@ Mario.Character.prototype.IsBlocking = function(x, y, xa, ya) {
     }
     
     blocking = this.World.TileMap.IsBlocking(x, y, xa, ya);
+
     if (blocking && ya > 0) {
         this.World.Bump(x, y, this.Large);
     }
     return blocking;
 };
+
+Mario.Character.prototype.Draw = function(context, camera) {
+    var xPixel = 0, yPixel = 0;
+    if (!this.Visible) {
+        return;
+    }
+    
+    xPixel = ((this.XOld + (this.X - this.XOld) * this.Delta) | 0) - this.XPicO;
+    yPixel = ((this.YOld + (this.Y - this.YOld) * this.Delta) | 0) - this.YPicO;
+
+    var myContext = new Editor.Context(context,320,240);
+    context.save();
+    // context.scale(this.XFlip ? -1 : 1, this.YFlip ? -1 : 1);
+    // context.translate(this.XFlip ? -320 : 0, this.YFlip ? -240 : 0);
+
+    //myContext.DrawClipImage(this.Image,this.XFlip ? (320 - xPixel - this.PicWidth) : xPixel,this.YFlip ? (240 - yPixel - this.PicHeight) : yPixel
+    //    ,this.PicWidth, this.PicHeight,this.XPic * this.PicWidth, this.YPic * this.PicHeight, this.PicWidth, this.PicHeight);
+myContext.DrawClipImage(this.Image,xPixel,yPixel
+        ,this.PicWidth / 2, this.PicHeight / 2,this.XPic * this.UnitWidth, this.YPic * this.UnitHeight, this.PicWidth, this.PicHeight);
+    context.restore();
+};
+
 
 Mario.Character.prototype.Stomp = function(object) {
     var targetY = 0;
