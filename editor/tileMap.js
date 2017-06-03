@@ -19,7 +19,8 @@ Mario.Tile = {
         b[2] = this.BlockAll;
         b[3] = this.BlockUpper;
         //b[4] = this.BlockLower | this.Animated; 
-        b[4] = this.BlockAll | this.Animated | this.Breakable; 
+        //b[4] = this.BlockAll | this.Animated | this.Breakable | this.Bumpable; 
+        b[4] = this.Bumpable | this.BlockAll | this.Animated;
         b[5] = this.BlockAll | this.Animated | this.Breakable | this.PickUpable; 
         b[81] = this.BlockUpper;
 
@@ -60,6 +61,7 @@ Mario.TileMap = function(width, height) {
             this.Map[x][x] = 4;
         }
     }
+    this.Map[0][4] = 4;
     this.Map[10][4] = 4;
     this.Map[19][5] = 87;
     this.Map[19][6] = 81;

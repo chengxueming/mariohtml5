@@ -252,8 +252,9 @@ Editor.LevelState.prototype.Bump = function(x, y, canBreakBricks) {
     var block = this.TileMap.GetBlock(x, y), xx = 0, yy = 0;
 
     if ((Mario.Tile.Behaviors[block & 0xff] & Mario.Tile.Bumpable) > 0) {
-        this.BumpInto(x, y - 1);
-        this.TileMap.SetBlock(x, y, 4);
+        this.BumpInto(x, y + 1);
+        //设置为实心石头
+        this.TileMap.SetBlock(x, y, 2);
         this.TileMap.SetBlockData(x, y, 4);
 
         if ((Mario.Tile.Behaviors[block & 0xff] & Mario.Tile.Special) > 0) {
@@ -271,7 +272,7 @@ Editor.LevelState.prototype.Bump = function(x, y, canBreakBricks) {
     }
 
     if ((Mario.Tile.Behaviors[block & 0xff] & Mario.Tile.Breakable) > 0) {
-        this.BumpInto(x, y - 1);
+        this.BumpInto(x, y + 1);
         if (canBreakBricks) {
             Enjine.Resources.PlaySound("breakblock");
             this.TileMap.SetBlock(x, y, 0);

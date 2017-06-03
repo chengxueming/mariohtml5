@@ -70,8 +70,28 @@ Editor.Context.prototype.DrawAnimation = function(img,x,y,width,height,ypos,bloc
     x,this.Height-y-height , width, height);
 }
 
+//从图片的左上角裁剪一定高度 以x，y为左下角绘制到画布
 Editor.Context.prototype.DrawClipImage = function(img,x,y,width,height,sx,sy,swidth,sheight) {
     // y pos from 0
     this.Context.drawImage(img, sx, sy, swidth, sheight,
     x,this.Height-y-height , width, height);
+}
+
+//从左下角开始指定宽高绘制矩形框
+Editor.Context.prototype.StrokeRect = function(xStart,yStart,width,height) {
+    // body...
+    this.Context.strokeStyle="#000";/*设置边框*/ 
+    this.Context.lineWidth=3;/*边框的宽度*/ 
+    this.Context.strokeRect(xStart,this.Height-yStart-height,width,height); 
+}
+
+Editor.Context.prototype.DrawPoint = function(xStart,yStart) {
+    // body...
+    this.Context.strokeStyle="#000";/*设置边框*/ 
+    this.Context.lineWidth=3;/*边框的宽度*/ 
+    with (this.Context)
+    {
+        moveTo(xStart,yStart);
+        lineTo(xStart+1,yStart+1);
+    }
 }

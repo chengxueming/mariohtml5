@@ -108,6 +108,7 @@ Mario.TileMapRenderer.prototype.DrawDynamic = function(context, camera) {
                 if (x >= 0 && y >= 0 && x < this.tileMap.Width && y < this.tileMap.Height) {
                     yo = this.tileMap.Data[x][y];
                 }
+                //绘制石头弹起来起的效果
                 if (yo > 0) {
                     yo = (Math.sin((yo - this.Delta) / 4 * Math.PI) * 8) | 0;
                 }
