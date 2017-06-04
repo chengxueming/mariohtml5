@@ -41,6 +41,14 @@ Mario.NotchSprite.prototype.Draw = function(context, camera) {
 myContext.DrawClipImage(this.Image,xPixel,yPixel
         ,this.PicWidth , this.PicHeight ,this.XPic * this.PicWidth, this.YPic * this.PicHeight, this.PicWidth, this.PicHeight);
     context.restore();
+
+        var Debug = false;
+    if(Debug){
+        xPixel = ((this.XOld + (this.X - this.XOld) * this.Delta) | 0) - this.Width;
+        yPixel = ((this.YOld + (this.Y - this.YOld) * this.Delta) | 0) - this.YPicO;
+        //myContext.DrawPoint(xPixel + this.Width,yPixel + this.YPicO);
+        myContext.StrokeRect(xPixel,yPixel,this.Width*2,this.Height + this.YPicO)
+    }
 };
 
 Mario.NotchSprite.prototype.Update = function(delta) {

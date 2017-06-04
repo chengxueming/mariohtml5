@@ -9,7 +9,7 @@ Mario.CoinAnim = function(world, x, y) {
     this.Image = Enjine.Resources.Images["map"];
     this.PicWidth = this.PicHeight = 16;
     this.X = x * 16;
-    this.Y = y * 16 - 16;
+    this.Y = y * 16 + 16;
     this.Xa = 0;
     this.Ya = +6;
     this.XPic = 0;
@@ -32,5 +32,5 @@ Mario.CoinAnim.prototype.Move = function() {
     this.XPic = this.Life & 3;
     this.X += this.Xa;
     this.Y += this.Ya;
-    this.Ya += 1;
+    this.Ya -= 1;
 };

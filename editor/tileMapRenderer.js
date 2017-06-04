@@ -28,7 +28,7 @@ Mario.TileMapRenderer.prototype.Draw = function(context, camera) {
 };
 
 Mario.TileMapRenderer.prototype.DrawStatic = function(context, camera) {
-    var x = 0, y = 0, b = 0;
+    var x = 0, y = 0, b = 0, yo = 0;
     var xTileStart = (camera.X / 16) | 0;
     var xTileEnd = ((camera.X + this.Width) / 16) | 0;
     var yTileStart = (camera.Y / 16) | 0;
@@ -46,20 +46,21 @@ Mario.TileMapRenderer.prototype.DrawStatic = function(context, camera) {
         for (y = yTileStart; y < yTileEnd; y++) {
             b = this.tileMap.GetBlock(x, y) & 0xff;
             if ((Mario.Tile.Behaviors[b] & Mario.Tile.Animated) === 0) {
-                this.DrawImage(myContext,camera,b,x,y);
+                yo = this.GetYo(x,y);
+                this.DrawImage(myContext,camera,b,x,y,yo);
             }
         }
     }
 };
 
-Mario.TileMapRenderer.prototype.DrawImage = function(context,camera,b,x,y)
+Mario.TileMapRenderer.prototype.DrawImage = function(context,camera,b,x,y,yo = 0)
 {
     if(b == 0)
     {
         return;
     }
     block = "block-"+b;
-    context.DrawImage(Enjine.Resources.Images[block], ((x << 4) - camera.X) | 0, ((y << 4) - camera.Y) | 0 ,16 ,16);
+    context.DrawImage(Enjine.Resources.Images[block], ((x << 4) - camera.X) | 0, ((y << 4) - camera.Y + yo) | 0 ,16 ,16);
 }
 
 Mario.TileMapRenderer.prototype.DrawAnimation = function(context,camera,b,x,y,frame,yo = 0)
@@ -69,7 +70,7 @@ Mario.TileMapRenderer.prototype.DrawAnimation = function(context,camera,b,x,y,fr
         return;
     }
     block = "block-"+b;
-    context.DrawAnimation(Enjine.Resources.Images[block], ((x << 4) - camera.X) | 0, ((y << 4) - camera.Y - yo) | 0 ,16 ,16,frame,4);
+    context.DrawAnimation(Enjine.Resources.Images[block], ((x << 4) - camera.X) | 0, ((y << 4) - camera.Y + yo) | 0 ,16 ,16,frame,4);
 }
 
 Mario.TileMapRenderer.prototype.DrawDynamic = function(context, camera) {
@@ -104,17 +105,24 @@ Mario.TileMapRenderer.prototype.DrawDynamic = function(context, camera) {
                 if ((((b % 16) / 4) | 0) === 3 && ((b / 16) | 0) === 0) {
                     animTime = 2;
                 }
-                yo = 0;
-                if (x >= 0 && y >= 0 && x < this.tileMap.Width && y < this.tileMap.Height) {
-                    yo = this.tileMap.Data[x][y];
-                }
-                //绘制石头弹起来起的效果
-                if (yo > 0) {
-                    yo = (Math.sin((yo - this.Delta) / 4 * Math.PI) * 8) | 0;
-                }
+                yo = this.GetYo(x,y);
                 //context.drawImage(Enjine.Resources.Images["map"], frame.X, frame.Y, frame.Width, frame.Height, (x << 4) - camera.X, (y << 4) - camera.Y - yo, frame.Width, frame.Height);
                 this.DrawAnimation(myContext,camera,b,x,y,animTime,yo);
             }
         }
     }
 };
+
+
+Mario.TileMapRenderer.prototype.GetYo = function(x,y) {
+    var yo = 0;
+    if (x >= 0 && y >= 0 && x < this.tileMap.Width && y < this.tileMap.Height) {
+        yo = this.tileMap.Data[x][y];
+    }
+    //绘制石头弹起来起的效果
+    if (yo > 0) {
+        yo = (Math.sin((yo - this.Delta) / 4 * Math.PI) * 8) | 0;
+    }
+    return yo;
+};
+

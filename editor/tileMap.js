@@ -3,6 +3,21 @@
 	Code by Rob Kleffner, 2011
 */
 Mario.Tile = {
+    /*Mario.levelState.Bump*/
+    //BlockAll | Bumpable 弹起来一下 变成石头 蹦出金币
+    //BlockAll | Bumpable | Special 在bumpable基础上 small 出蘑菇 large 出花朵
+    //BlockAll | Breakable 可以蹦出碎砖
+
+    /*Mario.TileMapRenderer.DrawDynamic*/
+    //Animated 四个图联动
+
+    /*Mario.TileMapRenderer.IsBlocking*/
+    //BlockAll IsBlocking返回true
+    //BlockUpper 可以穿上去不可以钻下来
+
+    /*Mario.Character.prototype.IsBlocking*/
+    //PickUpable 金币(不用blockall)
+
     BlockUpper: 1 << 0,
     BlockAll: 1 << 1,
     BlockLower: 1 << 2,
@@ -20,8 +35,8 @@ Mario.Tile = {
         b[3] = this.BlockUpper;
         //b[4] = this.BlockLower | this.Animated; 
         //b[4] = this.BlockAll | this.Animated | this.Breakable | this.Bumpable; 
-        b[4] = this.Bumpable | this.BlockAll | this.Animated;
-        b[5] = this.BlockAll | this.Animated | this.Breakable | this.PickUpable; 
+        b[4] = this.Bumpable | this.BlockAll | this.Animated | this.Breakable;
+        b[5] = this.BlockAll | this.Bumpable |this.Animated | this.Special; 
         b[81] = this.BlockUpper;
 
         this.Behaviors = b;

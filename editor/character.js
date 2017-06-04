@@ -91,7 +91,7 @@ Mario.Character.prototype.Initialize = function(world) {
     //Sprite
     this.Carried = null;
     
-    this.SetLarge(true, this.Fire);
+    this.SetLarge(this.Large, this.Fire);
 };
 
 Mario.Character.prototype.SetPosition = function(X,Y) {
@@ -265,7 +265,7 @@ Mario.Character.prototype.Move = function() {
     
     if (Enjine.KeyboardInput.IsKeyDown(Enjine.Keys.A) && this.CanShoot && this.Fire && this.World.FireballsOnScreen < 2) {
         Enjine.Resources.PlaySound("fireball");
-        this.World.AddSprite(new Mario.Fireball(this.World, this.X + this.Facing * 6, this.Y - 20, this.Facing));
+        this.World.AddSprite(new Mario.Fireball(this.World, this.X + this.Facing * 6, this.Y + 20, this.Facing));
     }
     
     this.CanShoot = !Enjine.KeyboardInput.IsKeyDown(Enjine.Keys.A);
@@ -395,9 +395,10 @@ Mario.Character.prototype.CalcPic = function() {
     
     if (this.Large) {
         if (this.Ducking) {
-            runFrame = 7;
+            runFrame = 6;
         }
         this.Height = this.Ducking ? 12 : 24;
+        this.PicHeight = this.Ducking ? 36:55; 
     } else {
         this.Height = 12;
     }
@@ -564,7 +565,7 @@ Mario.Character.prototype.IsBlocking = function(x, y, xa, ya) {
     
     block = this.World.TileMap.GetBlock(x, y);
     
-    //对于金币 蘑菇 花等物品 一接触就获得
+    //对于金币 一接触就获得
     if (((Mario.Tile.Behaviors[block & 0xff]) & Mario.Tile.PickUpable) > 0) {
         this.GetCoin();
         Enjine.Resources.PlaySound("coin");
