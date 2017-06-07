@@ -6,14 +6,14 @@
 Mario.CoinAnim = function(world, x, y) {
     this.World = world;
     this.Life = 10;
-    this.Image = Enjine.Resources.Images["map"];
-    this.PicWidth = this.PicHeight = 16;
+    this.Image = Enjine.Resources.Images["effect-11"];
+    this.PicWidth = this.PicHeight = 32;
     this.X = x * 16;
     this.Y = y * 16 + 16;
     this.Xa = 0;
     this.Ya = +6;
     this.XPic = 0;
-    this.YPic = 2;
+    this.YPic = 0;
 };
 
 Mario.CoinAnim.prototype = new Mario.NotchSprite();
@@ -29,7 +29,7 @@ Mario.CoinAnim.prototype.Move = function() {
         }
     }
     
-    this.XPic = this.Life & 3;
+    this.YPic = this.Life & 3;
     this.X += this.Xa;
     this.Y += this.Ya;
     this.Ya -= 1;

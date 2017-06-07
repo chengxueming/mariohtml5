@@ -10,15 +10,15 @@ Mario.FireFlower = function(world, x, y) {
 	this.World = world;
 	this.X = x;
 	this.Y = y;
-	this.Image = Enjine.Resources.Images["items"];
+	this.Image = Enjine.Resources.Images["npc-14"];
 	
 	this.XPicO = 8;
 	this.YPicO = 1;
-	this.XPic = 1;
+	this.XPic = 0;
 	this.YPic = 0;
 	this.Height = 12;
 	this.Facing = 1;
-	this.PicWidth = this.PicHeight = 16;
+	this.PicWidth = this.PicHeight = 32;
 	
 	this.Life = 0;
 };

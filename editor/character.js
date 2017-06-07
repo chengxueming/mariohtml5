@@ -49,12 +49,6 @@ Mario.Character = function() {
     //在图片上的偏移 mario 是100 敌人是紧凑
     this.UnitHeight = 100;
     this.UnitWidth = 100;
-    //用来显示的宽高 mario 
-    this.ScreenWidth = 16;
-    this.ScreenHeight = 16;
-
-    this.ScreenWidth = 16;
-    this.ScreenHeight = 16;
 };
 
 Mario.Character.prototype = new Mario.NotchSprite(null);
@@ -91,7 +85,7 @@ Mario.Character.prototype.Initialize = function(world) {
     //Sprite
     this.Carried = null;
     
-    this.SetLarge(this.Large, this.Fire);
+    this.SetLarge(false, this.Fire);
 };
 
 Mario.Character.prototype.SetPosition = function(X,Y) {
@@ -412,147 +406,10 @@ Mario.Character.prototype.CalcPic = function() {
     
 };
 
-Mario.Character.prototype.SubMove = function(xa, ya) {
-    var collide = false;
-    
-    while (xa > 8) {
-        if (!this.SubMove(8, 0)) {
-            return false;
-        }
-        xa -= 8;
-    }
-    while (xa < -8) {
-        if (!this.SubMove(-8, 0)) {
-            return false;
-        }
-        xa += 8;
-    }
-    while (ya > 8) {
-        if (!this.SubMove(0, 8)) {
-            return false;
-        }
-        ya -= 8;
-    }
-    while (ya < -8) {
-        if (!this.SubMove(0, -8)) {
-            return false;
-        }
-        ya += 8;
-    }
-
-    //go up
-    if (ya > 0) {
-        if (this.IsBlocking(this.X + xa - this.Width, this.Y + ya + this.Height, xa, ya)) {
-            collide = true;
-        } else if (this.IsBlocking(this.X + xa + this.Width, this.Y + ya + this.Height, xa, ya)) {
-            collide = true;
-        }
-    }
-    //go down
-    if (ya < 0) {
-        if (this.IsBlocking(this.X + xa, this.Y + ya, xa, ya)) {
-            collide = true;
-        } else if (collide || this.IsBlocking(this.X + xa - this.Width, this.Y + ya, xa, 0)) {
-            collide = true;
-        } else if (collide || this.IsBlocking(this.X + xa + this.Width, this.Y + ya, xa, 0)) {
-            collide = true;
-        } else if (collide || this.IsBlocking(this.X + xa - this.Width, this.Y + ya - this.YPicO, xa, ya)) {
-            collide = true;
-        } else if (collide || this.IsBlocking(this.X + xa + this.Width, this.Y + ya - this.YPicO, xa, ya)) {
-            collide = true;
-        }
-    }
-    
-    if (xa > 0) {
-        this.Sliding = true;
-        if (this.IsBlocking(this.X + xa + this.Width, this.Y + ya + this.Height, xa, ya)) {
-            collide = true;
-        } else {
-            this.Sliding = false;
-        }
-        
-        if (this.IsBlocking(this.X + xa + this.Width, this.Y + ya + ((this.Height / 2) | 0), xa, ya)) {
-            collide = true
-        } else {
-            this.Sliding = false;
-        }
-        
-        if (this.IsBlocking(this.X + xa + this.Width, this.Y + ya, xa, ya)) {
-            collide = true;
-        } else {
-            this.Sliding = false;
-        }
-    }
-    if (xa < 0) {
-        this.Sliding = true;
-        if (this.IsBlocking(this.X + xa - this.Width, this.Y + ya + this.Height, xa, ya)) {
-            collide = true;
-        } else {
-            this.Sliding = false;
-        }
-        
-        if (this.IsBlocking(this.X + xa - this.Width, this.Y + ya + ((this.Height / 2) | 0), xa, ya)) {
-            collide = true;
-        } else {
-            this.Sliding = false;
-        }
-        
-        if (this.IsBlocking(this.X + xa - this.Width, this.Y + ya, xa, ya)) {
-            collide = true;
-        } else {
-            this.Sliding = false;
-        }
-    }
-    
-    if (collide) {
-        //go left
-        if (xa < 0) {
-            this.X = this.BackBorder(this.X - this.Width,16,-1) + this.Width;
-            //this.X = (((this.X - this.Width) / 16) | 0) * 16 + this.Width;
-            this.Xa = 0;
-        }
-        //go right
-        if (xa > 0) {
-            this.X = this.BackBorder(this.X + this.Width,16,1) - this.Width - 1;
-            //this.X = (((this.X + this.Width) / 16 + 1) | 0) * 16 - this.Width - 1;
-            this.Xa = 0;
-        }
-        //go up
-        if (ya > 0) {
-            this.Y = this.BackBorder(this.Y + this.Height,16,1) - this.Height;
-            //this.Y = (((this.Y + this.Height) / 16) | 0) * 16 + this.Height;
-            this.JumpTime = 0;
-            this.Ya = 0;
-        }
-        //go down
-        if (ya < 0) {
-            this.Y = this.BackBorder(this.Y - this.YPicO,16,-1) + this.YPicO;
-            //this.Y = (((this.Y + 1) / 16 ) | 0) * 16 + 1;
-            this.OnGround = true;
-        }
-        
-        return false;
-    } else {
-        this.X += xa;
-        this.Y += ya;
-        return true;
-    }
-};
 /**
 type -1 down or left return bigger 1 than border
 type 1 up or right return less 1 than border
 */
-Mario.Character.prototype.BackBorder = function (pos,width,type) {
-    // body...
-    var res;
-    if(type == 1)
-    {
-        res = (((pos - 1) / width) | 0) * width + width;
-    }else{
-        res = (((pos + 1) / width) | 0) * width ;
-    }
-    return res;
-}
 
 Mario.Character.prototype.IsBlocking = function(x, y, xa, ya) {
     var blocking = false, block = 0, xx = 0, yy = 0;
@@ -585,36 +442,7 @@ Mario.Character.prototype.IsBlocking = function(x, y, xa, ya) {
     return blocking;
 };
 
-Mario.Character.prototype.Draw = function(context, camera) {
-    var xPixel = 0, yPixel = 0;
-    if (!this.Visible) {
-        return;
-    }
-    
-    xPixel = ((this.XOld + (this.X - this.XOld) * this.Delta) | 0) - this.XPicO;
-    yPixel = ((this.YOld + (this.Y - this.YOld) * this.Delta) | 0) - this.YPicO;
-
-    var myContext = new Editor.Context(context,320,240);
-    context.save();
-    // context.scale(this.XFlip ? -1 : 1, this.YFlip ? -1 : 1);
-    // context.translate(this.XFlip ? -320 : 0, this.YFlip ? -240 : 0);
-    //myContext.DrawClipImage(this.Image,this.XFlip ? (320 - xPixel - this.PicWidth) : xPixel,this.YFlip ? (240 - yPixel - this.PicHeight) : yPixel
-    //    ,this.PicWidth, this.PicHeight,this.XPic * this.PicWidth, this.YPic * this.PicHeight, this.PicWidth, this.PicHeight);
-myContext.DrawClipImage(this.Image,xPixel,yPixel
-        ,this.PicWidth / 2, this.PicHeight / 2,this.XPic * this.UnitWidth, this.YPic * this.UnitHeight, this.PicWidth, this.PicHeight);
-    context.restore();
-
-    //用于调试的矩形
-    var Debug = false;
-    if(Debug){
-        xPixel = ((this.XOld + (this.X - this.XOld) * this.Delta) | 0) - this.Width;
-        yPixel = ((this.YOld + (this.Y - this.YOld) * this.Delta) | 0) - this.YPicO;
-        //myContext.DrawPoint(xPixel + this.Width,yPixel + this.YPicO);
-        myContext.StrokeRect(xPixel,yPixel,this.Width*2,this.Height + this.YPicO)
-    }
-};
-
-
+//被mario踩头上后，mario的处理，在blutte和enmy和shell的CollideCheck处理
 Mario.Character.prototype.Stomp = function(object) {
     var targetY = 0;
 

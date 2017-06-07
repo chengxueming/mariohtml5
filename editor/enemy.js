@@ -29,7 +29,7 @@ Mario.Enemy = function(world, x, y, dir, type, winged) {
     this.Image = Enjine.Resources.Images["enemies"];
     
     this.XPicO = 8;
-    this.YPicO = 31;
+    this.YPicO = 1;
     this.AvoidCliffs = this.Type === Mario.Enemy.RedKoopa;
     this.NoFireballDeath = this.Type === Mario.Enemy.Spiky;
     
@@ -83,18 +83,6 @@ Mario.Enemy.prototype.CollideCheck = function() {
             }
         }
     }
-};
-
-Mario.Enemy.prototype.BackBorder = function (pos,width,type) {
-    // body...
-    var res;
-    if(type == -1)
-    {
-        res = (((pos + 1) / width) | 0) * width ;
-    }else{
-        res = (((pos - 1) / width) | 0) * width ;
-    }
-    return res;
 };
 
 Mario.Enemy.prototype.Move = function() {
@@ -176,118 +164,6 @@ Mario.Enemy.prototype.EditorMove = function() {
     //this.XPic = (((this.Tick / 2) | 0) & 1) * 2 + (((this.Tick / 6) | 0) & 1);
 }
 
-
-Mario.Enemy.prototype.SubMove = function(xa, ya) {
-    var collide = false;
-    
-    while (xa > 8) {
-        if (!this.SubMove(8, 0)) {
-            return false;
-        }
-        xa -= 8;
-    }
-    while (xa < -8) {
-        if (!this.SubMove(-8, 0)) {
-            return false;
-        }
-        xa += 8;
-    }
-    while (ya > 8) {
-        if (!this.SubMove(0, 8)) {
-            return false;
-        }
-        ya -= 8;
-    }
-    while (ya < -8) {
-        if (!this.SubMove(0, -8)) {
-            return false;
-        }
-        ya += 8;
-    }
-
-    //go up
-    if (ya > 0) {
-        if (this.IsBlocking(this.X + xa - this.Width, this.Y + ya + this.Height, xa, 0)) {
-            collide = true;
-        } else if (this.IsBlocking(this.X + xa + this.Width, this.Y + ya + this.Height, xa, 0)) {
-            collide = true;
-        } else if (this.IsBlocking(this.X + xa - this.Width, this.Y + ya - 1 + this.Height, xa, ya)) {
-            collide = true;
-        } else if (this.IsBlocking(this.X + xa + this.Width, this.Y + ya - 1 + this.Height, xa, ya)) {
-            collide = true;
-        }
-    }
-    //go down
-    if (ya < 0) {
-        if (this.IsBlocking(this.X + xa, this.Y + ya, xa, ya)) {
-            collide = true;
-        } else if (collide || this.IsBlocking(this.X + xa - this.Width, this.Y + ya, xa, ya)) {
-            collide = true;
-        } else if (collide || this.IsBlocking(this.X + xa + this.Width, this.Y + ya, xa, ya)) {
-            collide = true;
-        }
-    }
-    
-    if (xa > 0) {
-        if (this.IsBlocking(this.X + xa + this.Width, this.Y + ya + this.Height, xa, ya)) {
-            collide = true;
-        }
-        
-        if (this.IsBlocking(this.X + xa + this.Width, this.Y + ya + ((this.Height / 2) | 0), xa, ya)) {
-            collide = true
-        } 
-        
-        if (this.IsBlocking(this.X + xa + this.Width, this.Y + ya, xa, ya)) {
-            collide = true;
-        } 
-    }
-    if (xa < 0) {
-        if (this.IsBlocking(this.X + xa - this.Width, this.Y + ya + this.Height, xa, ya)) {
-            collide = true;
-        } 
-        
-        if (this.IsBlocking(this.X + xa - this.Width, this.Y + ya + ((this.Height / 2) | 0), xa, ya)) {
-            collide = true;
-        }         
-        if (this.IsBlocking(this.X + xa - this.Width, this.Y + ya, xa, ya)) {
-            collide = true;
-        } 
-    }
-    
-    if (collide) {
-        //go left
-        if (xa < 0) {
-            this.X = this.BackBorder(this.X - this.Width,16,-1);
-            //this.X = (((this.X - this.Width) / 16) | 0) * 16 + this.Width;
-            this.Xa = 0;
-        }
-        //go right
-        if (xa > 0) {
-            this.X = this.BackBorder(this.X + this.Width,16,1);
-            //this.X = (((this.X + this.Width) / 16 + 1) | 0) * 16 - this.Width - 1;
-            this.Xa = 0;
-        }
-        //go up
-        if (ya > 0) {
-            this.Y = this.BackBorder(this.Y + this.Height,16,1);
-            //this.Y = (((this.Y + this.Height) / 16) | 0) * 16 + this.Height;
-            this.JumpTime = 0;
-            this.Ya = 0;
-        }
-        //go down
-        if (ya < 0) {
-            this.Y = this.BackBorder(this.Y,16,-1);
-            //this.Y = (((this.Y + 1) / 16 ) | 0) * 16 + 1;
-            this.OnGround = true;
-        }
-        
-        return false;
-    } else {
-        this.X += xa;
-        this.Y += ya;
-        return true;
-    }
-};
 
 Mario.Enemy.prototype.IsBlocking = function(x, y, xa, ya) {
     x = (x / 16) | 0;

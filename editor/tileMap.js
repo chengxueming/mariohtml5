@@ -77,6 +77,8 @@ Mario.TileMap = function(width, height) {
         }
     }
     this.Map[0][4] = 4;
+    this.Map[4][4] = 4;
+
     this.Map[10][4] = 4;
     this.Map[19][5] = 87;
     this.Map[19][6] = 81;

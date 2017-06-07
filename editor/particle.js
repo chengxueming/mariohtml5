@@ -9,16 +9,16 @@ Mario.Particle = function(world, x, y, xa, ya, xPic, yPic) {
 	this.Y = y;
 	this.Xa = xa;
 	this.Ya = ya;
-	this.XPic = (Math.random() * 2) | 0;
-	this.YPic = 0;
+	this.XPic = 0;
+	this.YPic = (Math.random() * 2) | 0;
 	this.XPicO = 4;
 	this.YPicO = 4;
 	
-	this.PicWidth = 8;
-	this.PicHeight = 8;
+	this.PicWidth = 16;
+	this.PicHeight = 16;
 	this.Life = 10;
 	
-	this.Image = Enjine.Resources.Images["particles"];
+	this.Image = Enjine.Resources.Images["effect-1"];
 };
 
 Mario.Particle.prototype = new Mario.NotchSprite();

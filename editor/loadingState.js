@@ -61,8 +61,10 @@ Editor.LoadingState.prototype.Enter = function() {
     this.Images[17].src = "graphics/background2/background2-2.png";
     
     Enjine.Resources.AddImages(this.Images);
-    this.LoadSmbxResource("block");
-    this.LoadSmbxResource("mario");
+    this.LoadSmbxResource("block",638);
+    this.LoadSmbxResource("mario",7);
+    this.LoadSmbxResource("effect",148);
+    this.LoadSmbxResource("npc",291);
     var testAudio = new Audio();
 	
     if (testAudio.canPlayType("audio/mp3")) {
@@ -128,30 +130,50 @@ Editor.LoadingState.prototype.Enter = function() {
 //     Enjine.Resources.AddImages(imgs);
 // };
 
-Editor.LoadingState.prototype.LoadSmbxResource = function(type) {
+Editor.LoadingState.prototype.LoadSmbxResource = function(type,count) {
     // body...
-    var path = "graphics/" + type + "/";
-    var files = [
-    "1",
-    "2",
-    "3",
-    "4",
-    "5",
-    "6",
-    "81",
-    "87"
-    ];
     var imgs = [];
-    for (var i = 0; i < files.length; i++) {
-        var img = {"name":type+"-"+files[i],"src":path+type+"-"+files[i]+".png"};
-        imgs.push(img);
-    };
-    for (i = 7; i <= 20; i++) {
+    var path = "graphics/" + type + "/";
+    for (i = 1; i <= count; i++) {
         var img = {"name":type+"-"+i,"src":path+type+"-"+i+".png"};
         imgs.push(img);
     };
     Enjine.Resources.AddImages(imgs);
 };
+
+// Editor.LoadingState.prototype.LoadSmbxResource = function(type) {
+//     // body...
+//     var path = "graphics/" + type + "/";
+//     var files = [
+//     "1",
+//     "2",
+//     "3",
+//     "4",
+//     "5",
+//     "6",
+//     "81",
+//     "87"
+//     ];
+//     var imgs = [];
+//     for (var i = 0; i < files.length; i++) {
+//         var img = {"name":type+"-"+files[i],"src":path+type+"-"+files[i]+".png"};
+//         imgs.push(img);
+//     };
+//     if("block" == type) {
+//         for (i = 7; i <= 20; i++) {
+//             var img = {"name":type+"-"+i,"src":path+type+"-"+i+".png"};
+//             imgs.push(img);
+//         };
+//     }
+//     if("npc" == type) {
+//         for (i = 109; i <= 112; i++) {
+//             var img = {"name":type+"-"+i,"src":path+type+"-"+i+".png"};
+//             imgs.push(img);
+//         };
+//     }
+//     Enjine.Resources.AddImages(imgs);
+// };
+
 
 
 Editor.LoadingState.prototype.Exit = function() {
