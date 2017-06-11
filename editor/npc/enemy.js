@@ -26,26 +26,47 @@ Mario.Enemy = function(world, x, y, dir, type, winged) {
     this.Type = type;
     this.Winged = winged;
     
-    this.Image = Enjine.Resources.Images["enemies"];
-    
+    this.Image = this.getImage(type);
     this.XPicO = 8;
-    this.YPicO = 31;
+    this.YPicO = 1;
     this.AvoidCliffs = this.Type === Mario.Enemy.RedKoopa;
     this.NoFireballDeath = this.Type === Mario.Enemy.Spiky;
     
-    this.YPic = this.Type;
-    if (this.YPic > 1) {
+    this.XPic = 0;
+    this.PicWidth = 32;
+    this.PicHeight = 54;
+    //表示除了乌龟以外，高度都是12
+    if (type > 1) {
         this.Height = 12;
+        this.PicHeight = 32;
     }
     this.Facing = dir;
     if (this.Facing === 0) {
         this.Facing = 1;
     }
     
-    this.PicWidth = 16;
+
 };
 
-Mario.Enemy.prototype = new Bird.NotchSprite();
+//Static variables
+Mario.Enemy.RedKoopa = 0;
+Mario.Enemy.GreenKoopa = 1;
+Mario.Enemy.Goomba = 2;
+Mario.Enemy.Spiky = 3;
+Mario.Enemy.Flower = 4;
+
+Mario.Enemy.prototype = new Mario.NotchSprite();
+
+Mario.Enemy.prototype.getImage = function(type) {
+    var imgMap = {
+        0: "npc-110",
+        1: "npc-109",
+        2: "npc-89",
+        3: "npc-285",
+        4: "npc-109"
+    };
+    return Enjine.Resources.Images[imgMap[type]];
+}
 
 Mario.Enemy.prototype.CollideCheck = function() {
     if (this.DeadTime !== 0) {
@@ -56,7 +77,8 @@ Mario.Enemy.prototype.CollideCheck = function() {
         
     if (xMarioD > -this.Width * 2 - 4 && xMarioD < this.Width * 2 + 4) {
         if (yMarioD > -this.Height && yMarioD < Mario.MarioCharacter.Height) {
-            if (this.Type !== Mario.Enemy.Spiky && Mario.MarioCharacter.Ya > 0 && yMarioD <= 0 && (!Mario.MarioCharacter.OnGround || !Mario.MarioCharacter.WasOnGround)) {
+            //判断能踩死的精灵(穿山甲踩不死)
+            if (this.Type !== Mario.Enemy.Spiky && Mario.MarioCharacter.Ya < 0 && yMarioD <= 0 && (!Mario.MarioCharacter.OnGround || !Mario.MarioCharacter.WasOnGround)) {
                 Mario.MarioCharacter.Stomp(this);
                 if (this.Winged) {
                     this.Winged = false;
@@ -106,6 +128,8 @@ Mario.Enemy.prototype.Move = function() {
             this.Ya *= 0.95;
             this.Ya += 1;
         }
+
+        this.CalcPic();
         return;
     }
     
@@ -124,12 +148,6 @@ Mario.Enemy.prototype.Move = function() {
     
     this.RunTime += Math.abs(this.Xa) + 5;
     
-    runFrame = ((this.RunTime / 20) | 0) % 2;
-    
-    if (!this.OnGround) {
-        runFrame = 1;
-    }
-    
     if (!this.SubMove(this.Xa, 0)) {
         this.Facing = -this.Facing;
     }
@@ -145,137 +163,47 @@ Mario.Enemy.prototype.Move = function() {
     
     if (!this.OnGround) {
         if (this.Winged) {
-            this.Ya += 0.6;
+            this.Ya -= 0.6;
         } else {
-            this.Ya += 2;
+            this.Ya -= 2;
         }
     } else if (this.Winged) {
-        this.Ya = -10;
+        this.Ya = 10;
     }
+    this.CalcPic();
+};
+
+Mario.Enemy.prototype.CalcPic = function() {
+    var runFrame = ((this.RunTime / 20) | 0) % 2;
     
+    if (!this.OnGround) {
+        runFrame = 1;
+    }
+
     if (this.Winged) {
         runFrame = ((this.WingTime / 4) | 0) % 2;
     }
-    
-    this.XPic = runFrame;
-};
 
-Mario.Enemy.prototype.SubMove = function(xa, ya) {
-    var collide = false;
-    
-    while (xa > 8) {
-        if (!this.SubMove(8, 0)) {
-            return false;
-        }
-        xa -= 8;
+    if(1 == this.Facing && this.Type != 2) {
+        runFrame += 2;
     }
-    while (xa < -8) {
-        if (!this.SubMove(-8, 0)) {
-            return false;
-        }
-        xa += 8;
-    }
-    while (ya > 8) {
-        if (!this.SubMove(0, 8)) {
-            return false;
-        }
-        ya -= 8;
-    }
-    while (ya < -8) {
-        if (!this.SubMove(0, -8)) {
-            return false;
-        }
-        ya += 8;
-    }
-    
-    if (ya > 0) {
-        if (this.IsBlocking(this.X + xa - this.Width, this.Y + ya, xa, 0)) {
-            collide = true;
-        } else if (this.IsBlocking(this.X + xa + this.Width, this.Y + ya, xa, 0)) {
-            collide = true;
-        } else if (this.IsBlocking(this.X + xa - this.Width, this.Y + ya + 1, xa, ya)) {
-            collide = true;
-        } else if (this.IsBlocking(this.X + xa + this.Width, this.Y + ya + 1, xa, ya)) {
-            collide = true;
-        }
-    }
-    if (ya < 0) {
-        if (this.IsBlocking(this.X + xa, this.Y + ya - this.Height, xa, ya)) {
-            collide = true;
-        } else if (collide || this.IsBlocking(this.X + xa - this.Width, this.Y + ya - this.Height, xa, ya)) {
-            collide = true;
-        } else if (collide || this.IsBlocking(this.X + xa + this.Width, this.Y + ya - this.Height, xa, ya)) {
-            collide = true;
-        }
-    }
-    
-    if (xa > 0) {
-        if (this.IsBlocking(this.X + xa + this.Width, this.Y + ya - this.Height, xa, ya)) {
-            collide = true;
-        }
-        if (this.IsBlocking(this.X + xa + this.Width, this.Y + ya - ((this.Height / 2) | 0), xa, ya)) {
-            collide = true;
-        }
-        if (this.IsBlocking(this.X + xa + this.Width, this.Y + ya, xa, ya)) {
-            collide = true;
-        }
-        
-        if (this.AvoidCliffs && this.OnGround && !this.World.Level.IsBlocking(((this.X + this.Xa + this.Width) / 16) | 0, ((this.Y / 16) + 1) | 0, this.Xa, 1)) {
-            collide = true;
-        }
-    }
-    if (xa < 0) {
-        if (this.IsBlocking(this.X + xa - this.Width, this.Y + ya - this.Height, xa, ya)) {
-            collide = true;
-        }
-        if (this.IsBlocking(this.X + xa - this.Width, this.Y + ya - ((this.Height / 2) | 0), xa, ya)) {
-            collide = true;
-        }
-        if (this.IsBlocking(this.X + xa - this.Width, this.Y + ya, xa, ya)) {
-            collide = true;
-        }
-        
-        if (this.AvoidCliffs && this.OnGround && !this.World.Level.IsBlocking(((this.X + this.Xa - this.Width) / 32) | 0, ((this.Y / 32) + 1) | 0, this.Xa, 1)) {
-            collide = true;
-        }
-    }
-    
-    if (collide) {
-        if (xa < 0) {
-            this.X = (((this.X - this.Width) / 16) | 0) * 16 + this.Width;
-            this.Xa = 0;
-        }
-        if (xa > 0) {
-            this.X = (((this.X + this.Width) / 16 + 1) | 0) * 16 - this.Width - 1;
-            this.Xa = 0;
-        }
-        if (ya < 0) {
-            this.Y = (((this.Y - this.Height) / 16) | 0) * 16 + this.Height;
-            this.JumpTime = 0;
-            this.Ya = 0;
-        }
-        if (ya > 0) {
-            this.Y = (((this.Y - 1) / 16 + 1) | 0) * 16 - 1;
-            this.OnGround = true;
-        }
-        
-        return false;
-    } else {
-        this.X += xa;
-        this.Y += ya;
-        return true;
-    }
-};
+    this.YPic = runFrame;
+}
+
+Mario.Enemy.prototype.EditorMove = function() {
+    //this.XPic = (((this.Tick / 2) | 0) & 1) * 2 + (((this.Tick / 6) | 0) & 1);
+}
+
 
 Mario.Enemy.prototype.IsBlocking = function(x, y, xa, ya) {
-    var Width = 32
-    x = (x / Width) | 0;
-    y = (y / Width) | 0;
-    if (x === ((this.X / Width) | 0) && y === ((this.Y / Width) | 0)) {
+    x = (x / 16) | 0;
+    y = (y / 16) | 0;
+    
+    if (x === (this.X / 16) | 0 && y === (this.Y / 16) | 0) {
         return false;
     }
     
-    return this.World.Level.IsBlocking(x, y, xa, ya);
+    return this.World.TileMap.IsBlocking(x, y, xa, ya);
 };
 
 Mario.Enemy.prototype.ShellCollideCheck = function(shell) {
@@ -351,7 +279,7 @@ Mario.Enemy.prototype.BumpCheck = function(xTile, yTile) {
     }
 };
 
-Mario.Enemy.prototype.SubDraw = Bird.NotchSprite.prototype.Draw;
+Mario.Enemy.prototype.SubDraw = Mario.NotchSprite.prototype.Draw;
 
 Mario.Enemy.prototype.Draw = function(context, camera) {
     var xPixel = 0, yPixel = 0;
@@ -396,9 +324,3 @@ Mario.Enemy.prototype.Draw = function(context, camera) {
     }
 };
 
-//Static variables
-Mario.Enemy.RedKoopa = 0;
-Mario.Enemy.GreenKoopa = 1;
-Mario.Enemy.Goomba = 2;
-Mario.Enemy.Spiky = 3;
-Mario.Enemy.Flower = 4;

@@ -14,6 +14,7 @@ Editor.LevelState = function() {
     this.Background = null;
     this.TileMap = null;
     this.TileMapRenderer = null;
+    //用来更新每一个物体的状态（蘑菇，花，乌龟，子弹）
     this.Sprites = null;
 }; 
 
@@ -52,6 +53,7 @@ Editor.LevelState.prototype.CheckFireballCollide = function(fireball) {
     this.FireballsToCheck.push(fireball);
 };
 
+//让Mario除了边界以外都位于屏幕的中央
 Editor.LevelState.prototype.UpdateCameraBefore = function(delta) {
     this.Camera.X = Mario.MarioCharacter.X - 160;
     this.Camera.Y = Mario.MarioCharacter.Y - 120;
@@ -78,20 +80,21 @@ Editor.LevelState.prototype.UpdateGame = function(delta) {
         this.FireballsOnScreen = 0;
 
     //remove the sprites outsight
-    for (i = 0; i < this.Sprites.Objects.length; i++) {
-        sprite = this.Sprites.Objects[i];
-        if (sprite !== Mario.MarioCharacter) {
-            xd = sprite.X - this.Camera.X;
-            yd = sprite.Y - this.Camera.Y;
-            if (xd < -64 || xd > 320 + 64 || yd < -64 || yd > 240 + 64) {
-                this.Sprites.RemoveAt(i);
-            } else {
-                if (sprite instanceof Mario.Fireball) {
-                    this.FireballsOnScreen++;
-                }
-            }
-        }
-    }
+    // for (i = 0; i < this.Sprites.Objects.length; i++) {
+    //     sprite = this.Sprites.Objects[i];
+    //     if (sprite !== Mario.MarioCharacter) {
+    //         xd = sprite.X - this.Camera.X;
+    //         yd = sprite.Y - this.Camera.Y;
+    //         //if (xd < -64 || xd > 320 + 64 || yd < -64 || yd > 240 + 64) {
+    //         if (xd < -64 || xd > 320 + 64) {
+    //             this.Sprites.RemoveAt(i);
+    //         } else {
+    //             if (sprite instanceof Mario.Fireball) {
+    //                 this.FireballsOnScreen++;
+    //             }
+    //         }
+    //     }
+    // }
 
     if (this.Paused) {
         for (i = 0; i < this.Sprites.Objects.length; i++) {
@@ -135,6 +138,7 @@ Editor.LevelState.prototype.UpdateGame = function(delta) {
 
                 if (dir !== 0) {
                     b = this.TileMap.GetBlock(x, y);
+                    //只有大炮才符合条件（14） 
                     if (((Mario.Tile.Behaviors[b & 0xff]) & Mario.Tile.Animated) > 0) {
                         if ((((b % 16) / 4) | 0) === 3 && ((b / 16) | 0) === 0) {
                             if ((this.Tick - x * 2) % 100 === 0) {
@@ -155,14 +159,17 @@ Editor.LevelState.prototype.UpdateGame = function(delta) {
             Enjine.Resources.PlaySound("cannon");
         }
 
+        //显示动画，物理碰撞的关键，调用notchsprite定义的move
         for (i = 0; i < this.Sprites.Objects.length; i++) {
             this.Sprites.Objects[i].Update(delta);
         }
 
+        //依次遍历每一个精灵与猪脚的碰撞效果
         for (i = 0; i < this.Sprites.Objects.length; i++) {
             this.Sprites.Objects[i].CollideCheck();
         }
 
+        //依次遍历每一个乌龟是否落到每一个精灵身上
         for (i = 0; i < this.ShellsToCheck.length; i++) {
             for (j = 0; j < this.Sprites.Objects.length; j++) {
                 if (this.Sprites.Objects[j] !== this.ShellsToCheck[i] && !this.ShellsToCheck[i].Dead) {
@@ -177,6 +184,7 @@ Editor.LevelState.prototype.UpdateGame = function(delta) {
         }
         this.ShellsToCheck.length = 0;
 
+        //依次遍历每一个子弹是否落到每一个精灵身上
         for (i = 0; i < this.FireballsToCheck.length; i++) {
             for (j = 0; j < this.Sprites.Objects.length; j++) {
                 if (this.Sprites.Objects[j] !== this.FireballsToCheck[i] && !this.FireballsToCheck[i].Dead) {
@@ -203,7 +211,7 @@ Editor.LevelState.prototype.Update = function(delta) {
     //Mario.MarioCharacter.Update(delta);
     this.UpdateCameraBefore(delta);
     this.UpdateGame(delta);
-    this.UpdateCameraAfter(delta);
+    //this.UpdateCameraAfter(delta);
     // if (Enjine.KeyboardInput.IsKeyDown(Enjine.Keys.Right)) {
     // this.Camera.X += 16;
     // }
