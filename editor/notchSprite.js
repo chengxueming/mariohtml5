@@ -7,9 +7,13 @@
 Mario.NotchSprite = function(image) {
     this.XOld = 0; this.YOld = 0;
     this.X = 0; this.Y = 0;
+    //碰撞检测中估计偏移
     this.Xa = 0; this.Ya = 0;
+    //图片资源索引
     this.XPic = 0; this.YPic = 0;
+    //单元资源内部原点;,用于X,Y偏移
     this.XPicO = 0; this.YPicO = 0;
+    //在资源中一个单元的大小
     this.PicWidth = 32; this.PicHeight = 32;
     this.XFlip = false; this.YFlip = false;
     this.Visible = true;
@@ -18,9 +22,6 @@ Mario.NotchSprite = function(image) {
     this.Tick = 0;
     this.SpriteTemplate = null;
     this.Layer = 1;
-    //在图片上的偏移 mario 是100 敌人是紧凑
-    this.UnitHeight = this.PicWidth;
-    this.UnitWidth = this.PicHeight;
 };
 
 Mario.NotchSprite.prototype = new Enjine.Drawable();
@@ -41,7 +42,7 @@ Mario.NotchSprite.prototype.Draw = function(context, camera) {
     //myContext.DrawClipImage(this.Image,this.XFlip ? (320 - xPixel - this.PicWidth) : xPixel,this.YFlip ? (240 - yPixel - this.PicHeight) : yPixel
     //    ,this.PicWidth, this.PicHeight,this.XPic * this.PicWidth, this.YPic * this.PicHeight, this.PicWidth, this.PicHeight);
 myContext.DrawClipImage(this.Image,xPixel,yPixel
-        ,this.PicWidth / 2, this.PicHeight / 2,this.XPic * this.UnitWidth, this.YPic * this.UnitHeight, this.PicWidth, this.PicHeight);
+        ,this.PicWidth / 2, this.PicHeight / 2,this.XPic * this.PicWidth, this.YPic * this.PicHeight, this.PicWidth, this.PicHeight);
     context.restore();
 
     //用于调试的矩形

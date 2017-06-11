@@ -28,7 +28,10 @@ Editor.LevelState.prototype.Enter = function() {
     this.TileMap = new Mario.TileMap(60,45);
     this.TileMapRenderer = new Mario.TileMapRenderer(this.TileMap,320,240);
     this.Sprites = new Enjine.DrawableManager();
-    //this.AddSprite(new Mario.Enemy(this,100,80,0,0,false));
+    this.AddSprite(new Mario.Enemy(this,100,80,0,0,false));
+    this.AddSprite(new Mario.Enemy(this,150,80,0,1,false));
+    this.AddSprite(new Mario.Enemy(this,170,80,0,2,false));
+    this.AddSprite(new Mario.Enemy(this,190,80,0,3,false));
     this.ShellsToCheck = [];
     this.FireballsToCheck = [];
     this.SpritesToAdd = [];

@@ -26,26 +26,47 @@ Mario.Enemy = function(world, x, y, dir, type, winged) {
     this.Type = type;
     this.Winged = winged;
     
-    this.Image = Enjine.Resources.Images["enemies"];
-    
+    this.Image = this.getImage(type);
     this.XPicO = 8;
     this.YPicO = 1;
     this.AvoidCliffs = this.Type === Mario.Enemy.RedKoopa;
     this.NoFireballDeath = this.Type === Mario.Enemy.Spiky;
     
-    this.YPic = this.Type;
-    if (this.YPic > 1) {
+    this.XPic = 0;
+    this.PicWidth = 32;
+    this.PicHeight = 54;
+    //表示除了乌龟以外，高度都是12
+    if (type > 1) {
         this.Height = 12;
+        this.PicHeight = 32;
     }
     this.Facing = dir;
     if (this.Facing === 0) {
         this.Facing = 1;
     }
     
-    this.PicWidth = 16;
+
 };
 
+//Static variables
+Mario.Enemy.RedKoopa = 0;
+Mario.Enemy.GreenKoopa = 1;
+Mario.Enemy.Goomba = 2;
+Mario.Enemy.Spiky = 3;
+Mario.Enemy.Flower = 4;
+
 Mario.Enemy.prototype = new Mario.NotchSprite();
+
+Mario.Enemy.prototype.getImage = function(type) {
+    var imgMap = {
+        0: "npc-110",
+        1: "npc-109",
+        2: "npc-89",
+        3: "npc-285",
+        4: "npc-109"
+    };
+    return Enjine.Resources.Images[imgMap[type]];
+}
 
 Mario.Enemy.prototype.CollideCheck = function() {
     if (this.DeadTime !== 0) {
@@ -106,6 +127,8 @@ Mario.Enemy.prototype.Move = function() {
             this.Ya *= 0.95;
             this.Ya += 1;
         }
+
+        this.CalcPic();
         return;
     }
     
@@ -123,12 +146,6 @@ Mario.Enemy.prototype.Move = function() {
     this.XFlip = this.Facing === -1;
     
     this.RunTime += Math.abs(this.Xa) + 5;
-    
-    runFrame = ((this.RunTime / 20) | 0) % 2;
-    
-    if (!this.OnGround) {
-        runFrame = 1;
-    }
     
     if (!this.SubMove(this.Xa, 0)) {
         this.Facing = -this.Facing;
@@ -152,13 +169,25 @@ Mario.Enemy.prototype.Move = function() {
     } else if (this.Winged) {
         this.Ya = 10;
     }
+    this.CalcPic();
+};
+
+Mario.Enemy.prototype.CalcPic = function() {
+    var runFrame = ((this.RunTime / 20) | 0) % 2;
     
+    if (!this.OnGround) {
+        runFrame = 1;
+    }
+
     if (this.Winged) {
         runFrame = ((this.WingTime / 4) | 0) % 2;
     }
-    
-    this.XPic = runFrame;
-};
+
+    if(1 == this.Facing && this.Type != 2) {
+        runFrame += 2;
+    }
+    this.YPic = runFrame;
+}
 
 Mario.Enemy.prototype.EditorMove = function() {
     //this.XPic = (((this.Tick / 2) | 0) & 1) * 2 + (((this.Tick / 6) | 0) & 1);
@@ -294,9 +323,3 @@ Mario.Enemy.prototype.Draw = function(context, camera) {
     }
 };
 
-//Static variables
-Mario.Enemy.RedKoopa = 0;
-Mario.Enemy.GreenKoopa = 1;
-Mario.Enemy.Goomba = 2;
-Mario.Enemy.Spiky = 3;
-Mario.Enemy.Flower = 4;

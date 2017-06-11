@@ -88,6 +88,36 @@ Mario.Character.prototype.Initialize = function(world) {
     this.SetLarge(false, this.Fire);
 };
 
+Mario.Character.prototype.Draw = function(context, camera) {
+    var xPixel = 0, yPixel = 0;
+    if (!this.Visible) {
+        return;
+    }
+    
+    xPixel = ((this.XOld + (this.X - this.XOld) * this.Delta) | 0) - this.XPicO;
+    yPixel = ((this.YOld + (this.Y - this.YOld) * this.Delta) | 0) - this.YPicO;
+
+    var myContext = new Editor.Context(context,320,240);
+    context.save();
+    // context.scale(this.XFlip ? -1 : 1, this.YFlip ? -1 : 1);
+    // context.translate(this.XFlip ? -320 : 0, this.YFlip ? -240 : 0);
+    //myContext.DrawClipImage(this.Image,this.XFlip ? (320 - xPixel - this.PicWidth) : xPixel,this.YFlip ? (240 - yPixel - this.PicHeight) : yPixel
+    //    ,this.PicWidth, this.PicHeight,this.XPic * this.PicWidth, this.YPic * this.PicHeight, this.PicWidth, this.PicHeight);
+myContext.DrawClipImage(this.Image,xPixel,yPixel
+        ,this.PicWidth / 2, this.PicHeight / 2,this.XPic * this.UnitWidth, this.YPic * this.UnitHeight, this.PicWidth, this.PicHeight);
+    context.restore();
+
+    //用于调试的矩形
+    var Debug = true;
+    if(Debug){
+        xPixel = ((this.XOld + (this.X - this.XOld) * this.Delta) | 0) - this.Width;
+        yPixel = ((this.YOld + (this.Y - this.YOld) * this.Delta) | 0) - this.YPicO;
+        //myContext.DrawPoint(xPixel + this.Width,yPixel + this.YPicO);
+        myContext.StrokeRect(xPixel,yPixel,this.Width*2,this.Height + this.YPicO)
+    }
+};
+
+
 Mario.Character.prototype.SetPosition = function(X,Y) {
     // body...
     this.X = X;
