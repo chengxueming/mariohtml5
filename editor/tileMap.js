@@ -102,7 +102,9 @@ Mario.TileMap = function(width, height) {
     // this.Map[5][8] = 4;
 
     //this.Map[2][4] = 4;
+    //this.ReadFromJson("./world/wordTest.json");
 };
+
 
 Mario.TileMap.prototype = {
     ReSize: function(X,Y) {
@@ -146,6 +148,15 @@ Mario.TileMap.prototype = {
         }
         this.Animate ++;
         this.Animate %= 4;
+    },
+
+    ReadFromJson: function(file) {
+        var reader = new FileReader();
+        var mapData = reader.readAsText(file);
+        mapData = JSON.parse(mapData);
+        this.Map = mapData.Map;
+        this.Width = mapData.Width;
+        this.Height = mapData.Height
     },
 
     // Draw: function(context,camera) {

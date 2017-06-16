@@ -41,7 +41,7 @@ Mario.NotchSprite.prototype.Draw = function(context, camera) {
     // context.translate(this.XFlip ? -320 : 0, this.YFlip ? -240 : 0);
     //myContext.DrawClipImage(this.Image,this.XFlip ? (320 - xPixel - this.PicWidth) : xPixel,this.YFlip ? (240 - yPixel - this.PicHeight) : yPixel
     //    ,this.PicWidth, this.PicHeight,this.XPic * this.PicWidth, this.YPic * this.PicHeight, this.PicWidth, this.PicHeight);
-myContext.DrawClipImage(this.Image,xPixel,yPixel
+    myContext.DrawClipImage(this.Image,xPixel,yPixel
         ,this.PicWidth / 2, this.PicHeight / 2,this.XPic * this.PicWidth, this.YPic * this.PicHeight, this.PicWidth, this.PicHeight);
     context.restore();
 

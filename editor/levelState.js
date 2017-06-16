@@ -16,6 +16,7 @@ Editor.LevelState = function() {
     this.TileMapRenderer = null;
     //用来更新每一个物体的状态（蘑菇，花，乌龟，子弹）
     this.Sprites = null;
+    this.TestEvent = 2;
 }; 
 
 Editor.LevelState.prototype = new Enjine.GameState();
@@ -38,10 +39,29 @@ Editor.LevelState.prototype.Enter = function() {
     this.SpritesToAdd = [];
     this.SpritesToRemove = [];
 
+    window.EventHandler = new EventHandlr({
+        onSpriteCycleStart: "onadding",
+        doSpriteCycleStart: "placed",
+        cycleCheckValidity: "alive",
+        timingDefault: 9
+    });
+    function testEvent(obj) {
+        --obj.TestEvent;
+    }
+    EventHandler.addEventInterval(testEvent , 2, this);
+
     this.Sprites.Add(Mario.MarioCharacter);
+    Mario.MessageHandler = new Mario.MessageHandler();
+
+    Mario.MessageHandler.On(this,"HIT_BLOCK",this.TestMessage);
 };
 
 Editor.LevelState.prototype.Exit = function() {
+
+};
+
+Editor.LevelState.prototype.TestMessage = function(recvObject,jsonParam) {
+    console.log("message get success DeathTime:" + recvObject.DeathTime);
 
 };
 
@@ -78,6 +98,7 @@ Editor.LevelState.prototype.UpdateCameraAfter = function(delta) {
 
 Editor.LevelState.prototype.UpdateGame = function(delta) {
         this.FireballsOnScreen = 0;
+        console.log(this.TestEvent);
 
     //remove the sprites outsight
     // for (i = 0; i < this.Sprites.Objects.length; i++) {
@@ -207,6 +228,7 @@ Editor.LevelState.prototype.UpdateGame = function(delta) {
 
 Editor.LevelState.prototype.Update = function(delta) {
     this.Delta = delta;
+    EventHandler.handleEvents();
     this.DeathTime ++;
     //Mario.MarioCharacter.Update(delta);
     this.UpdateCameraBefore(delta);

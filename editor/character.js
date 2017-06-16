@@ -466,7 +466,12 @@ Mario.Character.prototype.IsBlocking = function(x, y, xa, ya) {
     
     blocking = this.World.TileMap.IsBlocking(x, y, xa, ya);
 
+    if (blocking && ya < 0) {
+        
+    }
+
     if (blocking && ya > 0) {
+        Mario.MessageHandler.Fire("HIT_BLOCK","{}");
         this.World.Bump(x, y, this.Large);
     }
     return blocking;

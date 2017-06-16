@@ -76,9 +76,10 @@ Mario.Enemy.prototype.CollideCheck = function() {
     var xMarioD = Mario.MarioCharacter.X - this.X, yMarioD = Mario.MarioCharacter.Y - this.Y;
         
     if (xMarioD > -this.Width * 2 - 4 && xMarioD < this.Width * 2 + 4) {
-        if (yMarioD > -this.Height && yMarioD < Mario.MarioCharacter.Height) {
+        //if (yMarioD > -this.Height && yMarioD < Mario.MarioCharacter.Height) {
+        if (yMarioD < this.Height) {
             //判断能踩死的精灵(穿山甲踩不死)
-            if (this.Type !== Mario.Enemy.Spiky && Mario.MarioCharacter.Ya < 0 && yMarioD <= 0 && (!Mario.MarioCharacter.OnGround || !Mario.MarioCharacter.WasOnGround)) {
+            if (this.Type !== Mario.Enemy.Spiky && Mario.MarioCharacter.Ya < 0 && yMarioD >= 0 && (!Mario.MarioCharacter.OnGround || !Mario.MarioCharacter.WasOnGround)) {
                 Mario.MarioCharacter.Stomp(this);
                 if (this.Winged) {
                     this.Winged = false;
