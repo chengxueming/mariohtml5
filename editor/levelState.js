@@ -48,7 +48,7 @@ Editor.LevelState.prototype.Enter = function() {
     function testEvent(obj) {
         --obj.TestEvent;
     }
-    EventHandler.addEventInterval(testEvent , 2, this);
+    EventHandler.addEventInterval(testEvent , 2, Infinity,this);
 
     this.Sprites.Add(Mario.MarioCharacter);
     Mario.MessageHandler = new Mario.MessageHandler();

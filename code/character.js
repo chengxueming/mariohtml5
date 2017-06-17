@@ -594,8 +594,23 @@ Mario.Character.prototype.Win = function() {
     this.XDeathPos = this.X | 0;
     this.YDeathPos = this.Y | 0;
     this.World.Paused = true;
-    this.WinTime = 1;
     Enjine.Resources.PlaySound("exit");
+    this.WinEvent = window.EventHandler.addEventInterval(function(world){
+        if (Mario.MarioCharacter.WinTime > 0) {
+        Mario.StopMusic();
+        t = Mario.MarioCharacter.WinTime + world.Delta;
+        t = t * t * 0.2;
+
+        if (t > 900) {  
+            //TODO: goto map state with level won
+            Mario.GlobalMapState.LevelWon();
+            world.GotoMapState = true;
+            this.clearEvent(Mario.MarioCharacter.WinEvent);
+        }
+
+        world.RenderBlackout(world.Context, ((Mario.MarioCharacter.XDeathPos - world.Camera.X) | 0), ((Mario.MarioCharacter.YDeathPos - world.Camera.Y) | 0), (320 - t) | 0);
+        }
+    }, 1, Infinity, this.World);
 };
 
 Mario.Character.prototype.Die = function() {
@@ -605,6 +620,23 @@ Mario.Character.prototype.Die = function() {
     this.DeathTime = 1;
     Enjine.Resources.PlaySound("death");
     this.SetLarge(false, false);
+    this.DieEvent = window.EventHandler.addEventInterval(function(world){
+        Mario.StopMusic();
+        t = Mario.MarioCharacter.DeathTime + world.Delta;
+        t = t * t * 0.1;
+
+        if (t > 900) {
+            //TODO: goto map with level lost
+            Mario.MarioCharacter.Lives--;
+            world.GotoMapState = true;
+            if (Mario.MarioCharacter.Lives <= 0) {
+                world.GotoLoseState = true;
+            }
+            this.clearEvent(Mario.MarioCharacter.DieEvent);
+        }
+
+        world.RenderBlackout(world.Context, ((Mario.MarioCharacter.XDeathPos - world.Camera.X) | 0), ((Mario.MarioCharacter.YDeathPos - world.Camera.Y) | 0), (320 - t) | 0);
+    }, 1, Infinity, this.World);
 };
 
 Mario.Character.prototype.GetFlower = function() {
