@@ -17,7 +17,8 @@ Mario.Shell = function(world, x, y, type) {
 	this.Height = 12;
 	this.Facing = 0;
 	this.PicWidth = 32;
-	this.XPic = 4;
+	this.PicHeight = 28;
+	this.XPic = 0;
 	this.Ya = -5;
 	
 	this.Dead = false;
@@ -68,7 +69,7 @@ Mario.Shell.prototype.CollideCheck = function() {
 	var xMarioD = Mario.MarioCharacter.X - this.X, yMarioD = Mario.MarioCharacter.Y - this.Y;
 	if (xMarioD > -16 && xMarioD < 16) {
         if (yMarioD > -this.Height && yMarioD < Mario.MarioCharacter.Height) {
-			if (Mario.MarioCharacter.Ya > 0 && yMarioD <= 0 && (!Mario.MarioCharacter.OnGround || !Mario.MarioCharacter.WasOnGround)) {
+			if (Mario.MarioCharacter.Ya < 0 && yMarioD <= 0 && (!Mario.MarioCharacter.OnGround || !Mario.MarioCharacter.WasOnGround)) {
 				Mario.MarioCharacter.Stomp(this);
 				if (this.Facing !== 0) {
 					this.Xa = 0;
@@ -149,8 +150,9 @@ Mario.Shell.prototype.Move = function() {
     }
     
     if (!this.OnGround) {
-        this.Ya += 2;
+        this.Ya -= 2;
     }
+    this.CalcPic();
 };
 
 Mario.Shell.prototype.CalcPic = function() {

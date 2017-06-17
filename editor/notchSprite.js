@@ -46,7 +46,7 @@ Mario.NotchSprite.prototype.Draw = function(context, camera) {
     context.restore();
 
     //用于调试的矩形
-    var Debug = true;
+    var Debug = false;
     if(Debug){
         xPixel = ((this.XOld + (this.X - this.XOld) * this.Delta) | 0) - this.Width;
         yPixel = ((this.YOld + (this.Y - this.YOld) * this.Delta) | 0) - this.YPicO;

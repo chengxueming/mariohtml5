@@ -58,6 +58,13 @@ Mario.LevelState.prototype.Enter = function() {
     this.SpritesToAdd = [];
     this.SpritesToRemove = [];
 
+    window.EventHandler = new EventHandlr({
+        onSpriteCycleStart: "onadding",
+        doSpriteCycleStart: "placed",
+        cycleCheckValidity: "alive",
+        timingDefault: 9
+    });
+
     this.FontShadow = Mario.SpriteCuts.CreateBlackFont();
     this.Font = Mario.SpriteCuts.CreateWhiteFont();
 
@@ -306,37 +313,8 @@ Mario.LevelState.prototype.Draw = function(context) {
         t = t * t * 0.6;
         this.RenderBlackout(context, 160, 120, t | 0);
     }
-
-    if (Mario.MarioCharacter.WinTime > 0) {
-    	Mario.StopMusic();
-        t = Mario.MarioCharacter.WinTime + this.Delta;
-        t = t * t * 0.2;
-
-        if (t > 900) {
-            //TODO: goto map state with level won
-			Mario.GlobalMapState.LevelWon();
-			this.GotoMapState = true;
-        }
-
-        this.RenderBlackout(context, ((Mario.MarioCharacter.XDeathPos - this.Camera.X) | 0), ((Mario.MarioCharacter.YDeathPos - this.Camera.Y) | 0), (320 - t) | 0);
-    }
-
-    if (Mario.MarioCharacter.DeathTime > 0) {
-    	Mario.StopMusic();
-        t = Mario.MarioCharacter.DeathTime + this.Delta;
-        t = t * t * 0.1;
-
-        if (t > 900) {
-            //TODO: goto map with level lost
-			Mario.MarioCharacter.Lives--;
-			this.GotoMapState = true;
-			if (Mario.MarioCharacter.Lives <= 0) {
-				this.GotoLoseState = true;
-			}
-        }
-
-        this.RenderBlackout(context, ((Mario.MarioCharacter.XDeathPos - this.Camera.X) | 0), ((Mario.MarioCharacter.YDeathPos - this.Camera.Y) | 0), (320 - t) | 0);
-    }
+    this.Context = context;
+    EventHandler.handleEvents();
 };
 
 Mario.LevelState.prototype.DrawStringShadow = function(context, string, x, y) {
