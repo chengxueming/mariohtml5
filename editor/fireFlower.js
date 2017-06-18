@@ -26,12 +26,9 @@ Mario.FireFlower = function(world, x, y) {
 Mario.FireFlower.prototype = new Mario.NotchSprite();
 
 Mario.FireFlower.prototype.CollideCheck = function() {
-	var xMarioD = Mario.MarioCharacter.X - this.X, yMarioD = Mario.MarioCharacter.Y - this.Y;
-	if (xMarioD > -16 && xMarioD < 16) {
-		if (yMarioD > -this.Height && yMarioD < Mario.MarioCharacter.Height) {
-			Mario.MarioCharacter.GetFlower();
-			this.World.RemoveSprite(this);
-		}
+	if(this.SubCollideCheck(Mario.MarioCharacter)) {
+		Mario.MarioCharacter.GetFlower();
+		this.World.RemoveSprite(this);
 	}
 };
 

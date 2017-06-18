@@ -24,6 +24,11 @@ Mario.NotchSprite = function(image) {
     this.Layer = 1;
 };
 
+Mario.NotchSprite.MeUp = 1;
+Mario.NotchSprite.MeDown = 1 << 1;
+Mario.NotchSprite.MeLeft = 1 << 2;
+Mario.NotchSprite.MeRight = 1 << 3;
+
 Mario.NotchSprite.prototype = new Enjine.Drawable();
 
 Mario.NotchSprite.prototype.Draw = function(context, camera) {
@@ -46,7 +51,7 @@ Mario.NotchSprite.prototype.Draw = function(context, camera) {
     context.restore();
 
     //用于调试的矩形
-    var Debug = false;
+    var Debug = true;
     if(Debug){
         xPixel = ((this.XOld + (this.X - this.XOld) * this.Delta) | 0) - this.Width;
         yPixel = ((this.YOld + (this.Y - this.YOld) * this.Delta) | 0) - this.YPicO;
@@ -246,4 +251,136 @@ Mario.NotchSprite.prototype.BackBorder = function (pos,width,type) {
         res = (((pos + 1) / width) | 0) * width ;
     }
     return res;
+}
+
+// Mario.NotchSprite.prototype.SubCollideCheck = function(otherSprite) {
+//     //FireFlower 检测碰撞
+//     var xMarioD = Mario.MarioCharacter.X - this.X;
+//     var yMarioD = Mario.MarioCharacter.Y - this.Y;
+//     if (xMarioD > -16 && xMarioD < 16) {
+//         if (yMarioD > -this.Height && yMarioD < Mario.MarioCharacter.Height) {
+//             Mario.MarioCharacter.GetFlower();
+//             this.World.RemoveSprite(this);
+//         }
+//     }
+
+//     //Shell FireBall ColideCheck
+//     var xD = fireball.X - this.X, yD = fireball.Y - this.Y;
+//     if (xD > -16 && xD < 16) {
+//         if (yD > -this.Height && yD < fireball.Height) {
+//             if (this.Facing !== 0) {
+//                 return true;
+//             }
+            
+//             Enjine.Resources.PlaySound("kick");
+            
+//             this.Xa = fireball.Facing * 2;
+//             this.Ya = -5;
+//             if (this.SpriteTemplate !== null) {
+//                 this.SpriteTemplate.IsDead = true;
+//             }
+//             this.DeadTime = 100;
+//             this.YFlip = true;
+            
+//             return true;
+//         }
+//     }
+
+//     //enmy colide check
+//     var xMarioD = Mario.MarioCharacter.X - this.X;
+//     var yMarioD = Mario.MarioCharacter.Y - this.Y;
+//     if (xMarioD > -this.Width * 2 - 4 && xMarioD < this.Width * 2 + 4) {
+//         //if (yMarioD > -this.Height && yMarioD < Mario.MarioCharacter.Height) {
+//         if (yMarioD < this.Height) {
+//             //判断能踩死的精灵(穿山甲踩不死)
+//             if (this.Type !== Mario.Enemy.Spiky && Mario.MarioCharacter.Ya < 0 && yMarioD >= 0 && (!Mario.MarioCharacter.OnGround || !Mario.MarioCharacter.WasOnGround)) {
+//                 Mario.MarioCharacter.Stomp(this);
+//                 if (this.Winged) {
+//                     this.Winged = false;
+//                     this.Ya = 0;
+//                 } else {
+//                     this.YPicO = 31 - (32 - 8);
+//                     this.PicHeight = 8;
+                    
+//                     if (this.SpriteTemplate !== null) {
+//                         this.SpriteTemplate.IsDead = true;
+//                     }
+                    
+//                     this.DeadTime = 10;
+//                     this.Winged = false;
+                    
+//                     if (this.Type === Mario.Enemy.RedKoopa) {
+//                         this.World.AddSprite(new Mario.Shell(this.World, this.X, this.Y, 0));
+//                     } else if (this.Type === Mario.Enemy.GreenKoopa) {
+//                         this.World.AddSprite(new Mario.Shell(this.World, this.X, this.Y, 1));
+//                     }
+//                 }
+//             } else {
+//                 Mario.MarioCharacter.GetHurt();
+//             }
+//         }
+//     }
+
+//     //mushroom colide check
+//     var xMarioD = Mario.MarioCharacter.X - this.X, yMarioD = Mario.MarioCharacter.Y - this.Y;
+//     if (xMarioD > -16 && xMarioD < 16) {
+//         if (yMarioD > -this.Height && yMarioD < Mario.MarioCharacter.Height) {
+//             Mario.MarioCharacter.GetMushroom();
+//             this.World.RemoveSprite(this);
+//         }
+//     }
+
+
+// }
+
+Mario.NotchSprite.prototype.SubCollideCheck = function(other) {
+    //xD > 0 right; yD > 0 up;
+    var left1 = this.X - this.Width, left2 = other.X - other.Width;
+    var right1 = (this.X + this.Width), right2 = (other.X + other.Width);
+    var bottom1 = this.Y, bottom2 = other.Y;
+    var top1 = (this.Y + this.Height), top2 = other.Y + other.Height;
+    if (bottom1 > top2) {
+        return false;
+    }
+    if (top1 < bottom2) {
+        return false;
+    }
+    if (right1 < left2) {
+        return false;
+    }
+    if (left1 > right2) {
+        return false;
+    }
+
+    var status = 0;
+    if(bottom1 > bottom2) {
+        status |= Mario.NotchSprite.MeUp;
+    }else {
+        status |= Mario.NotchSprite.MeDown;
+    }
+
+    if(right1 > right2) {
+        status |= Mario.NotchSprite.MeRight;
+    }else {
+        status |= Mario.NotchSprite.MeLeft;
+    }
+    return status;
+}
+
+Mario.NotchSprite.prototype.UpdateDeath = function() {
+    this.DeadTime--;
+    
+    if (this.DeadTime === 0) {
+        this.DeadTime = 1;
+        for (i = 0; i < 8; i++) {
+            this.World.AddSprite(new Mario.Sparkle(this.World,((this.X + Math.random() * 16 - 8) | 0) + 4, ((this.Y + Math.random() * 8) | 0) + 4, Math.random() * 2 - 1, Math.random() * -1, 0, 1, 5));
+        }
+        this.World.RemoveSprite(this);
+    }
+    
+    this.X += this.Xa;
+    this.Y += this.Ya;
+    this.Ya *= 0.95;
+    this.Ya -= 1;
+    return;
 }

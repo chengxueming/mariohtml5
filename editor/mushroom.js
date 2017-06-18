@@ -26,12 +26,9 @@ Mario.Mushroom = function(world, x, y) {
 Mario.Mushroom.prototype = new Mario.NotchSprite();
 
 Mario.Mushroom.prototype.CollideCheck = function() {
-    var xMarioD = Mario.MarioCharacter.X - this.X, yMarioD = Mario.MarioCharacter.Y - this.Y;
-    if (xMarioD > -16 && xMarioD < 16) {
-        if (yMarioD > -this.Height && yMarioD < Mario.MarioCharacter.Height) {
-            Mario.MarioCharacter.GetMushroom();
-            this.World.RemoveSprite(this);
-        }
+    if(this.SubCollideCheck(Mario.MarioCharacter)) {
+        Mario.MarioCharacter.GetMushroom();
+        this.World.RemoveSprite(this);
     }
 };
 

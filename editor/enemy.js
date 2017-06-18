@@ -73,36 +73,32 @@ Mario.Enemy.prototype.CollideCheck = function() {
         return;
     }
     
-    var xMarioD = Mario.MarioCharacter.X - this.X, yMarioD = Mario.MarioCharacter.Y - this.Y;
-        
-    if (xMarioD > -this.Width * 2 - 4 && xMarioD < this.Width * 2 + 4) {
-        if (yMarioD > -this.Height && yMarioD < Mario.MarioCharacter.Height) {
-            //判断能踩死的精灵(穿山甲踩不死)
-            if (this.Type !== Mario.Enemy.Spiky && Mario.MarioCharacter.Ya < 0 && yMarioD <= 0 && (!Mario.MarioCharacter.OnGround || !Mario.MarioCharacter.WasOnGround)) {
-                Mario.MarioCharacter.Stomp(this);
-                if (this.Winged) {
-                    this.Winged = false;
-                    this.Ya = 0;
-                } else {
-                    this.YPicO = 31 - (32 - 8);
-                    this.PicHeight = 8;
-                    
-                    if (this.SpriteTemplate !== null) {
-                        this.SpriteTemplate.IsDead = true;
-                    }
-                    
-                    this.DeadTime = 10;
-                    this.Winged = false;
-                    
-                    if (this.Type === Mario.Enemy.RedKoopa) {
-                        this.World.AddSprite(new Mario.Shell(this.World, this.X, this.Y, 0));
-                    } else if (this.Type === Mario.Enemy.GreenKoopa) {
-                        this.World.AddSprite(new Mario.Shell(this.World, this.X, this.Y, 1));
-                    }
-                }
+    if(this.SubCollideCheck(Mario.MarioCharacter)){
+        //判断能踩死的精灵(穿山甲踩不死)
+        if (this.Type !== Mario.Enemy.Spiky && Mario.MarioCharacter.Ya < 0 && yMarioD <= 0 && (!Mario.MarioCharacter.OnGround || !Mario.MarioCharacter.WasOnGround)) {
+            Mario.MarioCharacter.Stomp(this);
+            if (this.Winged) {
+                this.Winged = false;
+                this.Ya = 0;
             } else {
-                Mario.MarioCharacter.GetHurt();
+                this.YPicO = 31 - (32 - 8);
+                this.PicHeight = 8;
+                
+                if (this.SpriteTemplate !== null) {
+                    this.SpriteTemplate.IsDead = true;
+                }
+                
+                this.DeadTime = 10;
+                this.Winged = false;
+                
+                if (this.Type === Mario.Enemy.RedKoopa) {
+                    this.World.AddSprite(new Mario.Shell(this.World, this.X, this.Y, 0));
+                } else if (this.Type === Mario.Enemy.GreenKoopa) {
+                    this.World.AddSprite(new Mario.Shell(this.World, this.X, this.Y, 1));
+                }
             }
+        } else {
+            Mario.MarioCharacter.GetHurt();
         }
     }
 };
@@ -126,7 +122,7 @@ Mario.Enemy.prototype.Move = function() {
             this.X += this.Xa;
             this.Y += this.Ya;
             this.Ya *= 0.95;
-            this.Ya += 1;
+            this.Ya -= 1;
         }
 
         this.CalcPic();
@@ -211,22 +207,19 @@ Mario.Enemy.prototype.ShellCollideCheck = function(shell) {
         return false;
     }
     
-    var xd = shell.X - this.X, yd = shell.Y - this.Y;
-    if (xd > -16 && xd < 16) {
-        if (yd > -this.Height && yd < shell.Height) {
-            Enjine.Resources.PlaySound("kick");
-            
-            this.Xa = shell.Facing * 2;
-            this.Ya = -5;
-            this.FlyDeath = true;
-            if (this.SpriteTemplate !== null) {
-                this.SpriteTemplate.IsDead = true;
-            }
-            this.DeadTime = 100;
-            this.Winged = false;
-            this.YFlip = true;
-            return true;
+    if(this.SubCollideCheck(shell)) {
+        Enjine.Resources.PlaySound("kick");
+        
+        this.Xa = shell.Facing * 2;
+        this.Ya = -5;
+        this.FlyDeath = true;
+        if (this.SpriteTemplate !== null) {
+            this.SpriteTemplate.IsDead = true;
         }
+        this.DeadTime = 100;
+        this.Winged = false;
+        this.YFlip = true;
+        return true;
     }
     return false;
 };
@@ -236,26 +229,23 @@ Mario.Enemy.prototype.FireballCollideCheck = function(fireball) {
         return false;
     }
     
-    var xd = fireball.X - this.X, yd = fireball.Y - this.Y;
-    if (xd > -16 && xd < 16) {
-        if (yd > -this.Height && yd < fireball.Height) {
-            if (this.NoFireballDeath) {
-                return true;
-            }
-        
-            Enjine.Resources.PlaySound("kick");
-            
-            this.Xa = fireball.Facing * 2;
-            this.Ya = -5;
-            this.FlyDeath = true;
-            if (this.SpriteTemplate !== null) {
-                this.SpriteTemplate.IsDead = true;
-            }
-            this.DeadTime = 100;
-            this.Winged = false;
-            this.YFlip = true;
+    if(this.SubCollideCheck(fireball)) {
+        if (this.NoFireballDeath) {
             return true;
         }
+    
+        Enjine.Resources.PlaySound("kick");
+        
+        this.Xa = fireball.Facing * 2;
+        this.Ya = -5;
+        this.FlyDeath = true;
+        if (this.SpriteTemplate !== null) {
+            this.SpriteTemplate.IsDead = true;
+        }
+        this.DeadTime = 100;
+        this.Winged = false;
+        this.YFlip = true;
+        return true;
     }
 };
 

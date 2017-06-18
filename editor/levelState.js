@@ -163,7 +163,7 @@ Editor.LevelState.prototype.UpdateGame = function(delta) {
                             if ((this.Tick - x * 2) % 100 === 0) {
                                 xCannon = x;
                                 for (i = 0; i < 8; i++) {
-                                    this.AddSprite(new Mario.Sparkle(this, x * 16 + 8, y * 16 + ((Math.random() * 16) | 0), Math.random() * dir, 0, 0, 1, 5));
+                                    this.AddSprite(new Mario.Sparkle(this.World, this, x * 16 + 8, y * 16 + ((Math.random() * 16) | 0), Math.random() * dir, 0, 0, 1, 5));
                                 }
                                 this.AddSprite(new Mario.BulletBill(this, x * 16 + 8 + dir * 8, y * 16 + 15, dir));
                                 hasShotCannon = true;

@@ -66,24 +66,21 @@ Mario.Shell.prototype.CollideCheck = function() {
 		return;
 	}
 	
-	var xMarioD = Mario.MarioCharacter.X - this.X, yMarioD = Mario.MarioCharacter.Y - this.Y;
-	if (xMarioD > -16 && xMarioD < 16) {
-        if (yMarioD > -this.Height && yMarioD < Mario.MarioCharacter.Height) {
-			if (Mario.MarioCharacter.Ya < 0 && yMarioD <= 0 && (!Mario.MarioCharacter.OnGround || !Mario.MarioCharacter.WasOnGround)) {
-				Mario.MarioCharacter.Stomp(this);
-				if (this.Facing !== 0) {
-					this.Xa = 0;
-					this.Facing = 0;
-				} else {
-					this.Facing = Mario.MarioCharacter.Facing;
-				}
+	if(this.SubCollideCheck(Mario.MarioCharacter)) {
+		if (Mario.MarioCharacter.Ya < 0 && yMarioD <= 0 && (!Mario.MarioCharacter.OnGround || !Mario.MarioCharacter.WasOnGround)) {
+			Mario.MarioCharacter.Stomp(this);
+			if (this.Facing !== 0) {
+				this.Xa = 0;
+				this.Facing = 0;
 			} else {
-				if (this.Facing !== 0) {
-					Mario.MarioCharacter.GetHurt();
-				} else {
-					Mario.MarioCharacter.Kick(this);
-					this.Facing = Mario.MarioCharacter.Facing;
-				}
+				this.Facing = Mario.MarioCharacter.Facing;
+			}
+		} else {
+			if (this.Facing !== 0) {
+				Mario.MarioCharacter.GetHurt();
+			} else {
+				Mario.MarioCharacter.Kick(this);
+				this.Facing = Mario.MarioCharacter.Facing;
 			}
 		}
 	}
@@ -97,21 +94,8 @@ Mario.Shell.prototype.Move = function() {
 	}
 	
 	if (this.DeadTime > 0) {
-		this.DeadTime--;
-		
-		if (this.DeadTime === 0) {
-			this.DeadTime = 1;
-			for (i = 0; i < 8; i++) {
-                this.World.AddSprite(new Mario.Sparkle(((this.X + Math.random() * 16 - 8) | 0) + 4, ((this.Y + Math.random() * 8) | 0) + 4, Math.random() * 2 - 1, Math.random() * -1, 0, 1, 5));
-            }
-			this.World.RemoveSprite(this);
-		}
-		
-		this.X += this.Xa;
-		this.Y += this.Ya;
-		this.Ya *= 0.95;
-		this.Ya += 1;
-		return;
+		this.UpdateDeath();
+		this.CalcPic();
 	}
 	
 	if (this.Facing !== 0) {
@@ -198,9 +182,7 @@ Mario.Shell.prototype.ShellCollideCheck = function(shell) {
         return false;
     }
     
-    var xD = shell.X - this.X, yD = shell.Y - this.Y;
-    if (xD > -16 && xD < 16) {
-        if (yD > -this.Height && yD < shell.Height) {
+    if(this.SubCollideCheck(shell))	{
             Enjine.Resources.PlaySound("kick");
             if (Mario.MarioCharacter.Carried === shell || Mario.MarioCharacter.Carried === this) {
                 Mario.MarioCharacter.Carried = null;

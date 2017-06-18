@@ -72,38 +72,33 @@ Mario.Enemy.prototype.CollideCheck = function() {
     if (this.DeadTime !== 0) {
         return;
     }
-    
-    var xMarioD = Mario.MarioCharacter.X - this.X, yMarioD = Mario.MarioCharacter.Y - this.Y;
-        
-    if (xMarioD > -this.Width * 2 - 4 && xMarioD < this.Width * 2 + 4) {
-        //if (yMarioD > -this.Height && yMarioD < Mario.MarioCharacter.Height) {
-        if (yMarioD < this.Height) {
-            //判断能踩死的精灵(穿山甲踩不死)
-            if (this.Type !== Mario.Enemy.Spiky && Mario.MarioCharacter.Ya < 0 && yMarioD >= 0 && (!Mario.MarioCharacter.OnGround || !Mario.MarioCharacter.WasOnGround)) {
-                Mario.MarioCharacter.Stomp(this);
-                if (this.Winged) {
-                    this.Winged = false;
-                    this.Ya = 0;
-                } else {
-                    this.YPicO = 31 - (32 - 8);
-                    this.PicHeight = 8;
-                    
-                    if (this.SpriteTemplate !== null) {
-                        this.SpriteTemplate.IsDead = true;
-                    }
-                    
-                    this.DeadTime = 10;
-                    this.Winged = false;
-                    
-                    if (this.Type === Mario.Enemy.RedKoopa) {
-                        this.World.AddSprite(new Mario.Shell(this.World, this.X, this.Y, 0));
-                    } else if (this.Type === Mario.Enemy.GreenKoopa) {
-                        this.World.AddSprite(new Mario.Shell(this.World, this.X, this.Y, 1));
-                    }
-                }
+    var status = this.SubCollideCheck(Mario.MarioCharacter);
+    if(status) {
+        //判断能踩死的精灵(穿山甲踩不死)
+        if (this.Type !== Mario.Enemy.Spiky && Mario.MarioCharacter.Ya < 0 && (status & Mario.NotchSprite.MeDown) && (!Mario.MarioCharacter.OnGround || !Mario.MarioCharacter.WasOnGround)) {
+            Mario.MarioCharacter.Stomp(this);
+            if (this.Winged) {
+                this.Winged = false;
+                this.Ya = 0;
             } else {
-                Mario.MarioCharacter.GetHurt();
+                this.YPicO = 31 - (32 - 8);
+                this.PicHeight = 8;
+                
+                if (this.SpriteTemplate !== null) {
+                    this.SpriteTemplate.IsDead = true;
+                }
+                
+                this.DeadTime = 10;
+                this.Winged = false;
+                
+                if (this.Type === Mario.Enemy.RedKoopa) {
+                    this.World.AddSprite(new Mario.Shell(this.World, this.X, this.Y, 0));
+                } else if (this.Type === Mario.Enemy.GreenKoopa) {
+                    this.World.AddSprite(new Mario.Shell(this.World, this.X, this.Y, 1));
+                }
             }
+        } else {
+            Mario.MarioCharacter.GetHurt();
         }
     }
 };
@@ -113,23 +108,7 @@ Mario.Enemy.prototype.Move = function() {
 
     this.WingTime++;
     if (this.DeadTime > 0) {
-        this.DeadTime--;
-        
-        if (this.DeadTime === 0) {
-            this.DeadTime = 1;
-            for (i = 0; i < 8; i++) {
-                this.World.AddSprite(new Mario.Sparkle(this.World, ((this.X + Math.random() * 16 - 8) | 0) + 4, ((this.Y - Math.random() * 8) | 0) + 4, Math.random() * 2 - 1, Math.random() * -1, 0, 1, 5));
-            }
-            this.World.RemoveSprite(this);
-        }
-        
-        if (this.FlyDeath) {
-            this.X += this.Xa;
-            this.Y += this.Ya;
-            this.Ya *= 0.95;
-            this.Ya += 1;
-        }
-
+        this.UpdateDeath();
         this.CalcPic();
         return;
     }
