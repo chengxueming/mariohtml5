@@ -2,7 +2,29 @@
 	A generic template for an enemy in the game.
 	Code by Rob Kleffner, 2011
 */
-
+// var setting = {
+//     draw: {
+//         img: "npc-171",
+//         xpic0: 8,
+//         ypic0: 1,
+//         picwidth: 16,
+//         picheight: 28,
+//     }
+//     body: {
+//         width: 4,
+//         height: 4,
+//     }
+//     signal: {
+//         ground: "Reverse",
+//         wall: "Die"
+//     },
+//     speed: {
+//         sky: 1.5,
+//     }
+//     style: {
+//         run: "0,1,2,3"
+//     }
+// }
 Mario.Enemy = function(world, x, y, dir, type, winged) {
     this.GroundInertia = 0.89;
     this.AirInertia = 0.89;

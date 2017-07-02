@@ -65,9 +65,9 @@ Mario.Shell.prototype.CollideCheck = function() {
 	if (this.Carried || this.Dead || this.DeadTime > 0) {
 		return;
 	}
-	
-	if(this.SubCollideCheck(Mario.MarioCharacter)) {
-		if (Mario.MarioCharacter.Ya < 0 && yMarioD <= 0 && (!Mario.MarioCharacter.OnGround || !Mario.MarioCharacter.WasOnGround)) {
+	var status = this.SubCollideCheck(Mario.MarioCharacter);
+	if(status) {
+		if (Mario.MarioCharacter.Ya < 0 && status&Mario.NotchSprite.MeDown && (!Mario.MarioCharacter.OnGround || !Mario.MarioCharacter.WasOnGround)) {
 			Mario.MarioCharacter.Stomp(this);
 			if (this.Facing !== 0) {
 				this.Xa = 0;
@@ -183,14 +183,13 @@ Mario.Shell.prototype.ShellCollideCheck = function(shell) {
     }
     
     if(this.SubCollideCheck(shell))	{
-            Enjine.Resources.PlaySound("kick");
-            if (Mario.MarioCharacter.Carried === shell || Mario.MarioCharacter.Carried === this) {
-                Mario.MarioCharacter.Carried = null;
-            }
-            this.Die();
-            shell.Die();
-            return true;
+        Enjine.Resources.PlaySound("kick");
+        if (Mario.MarioCharacter.Carried === shell || Mario.MarioCharacter.Carried === this) {
+            Mario.MarioCharacter.Carried = null;
         }
+        this.Die();
+        shell.Die();
+        return true;
     }
     return false;
 };

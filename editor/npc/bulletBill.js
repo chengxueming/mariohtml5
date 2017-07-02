@@ -42,8 +42,6 @@ Mario.BulletBill.prototype.CollideCheck = function() {
                 Mario.MarioCharacter.GetHurt();
             }
         }
-    }
-
 };  
 
 Mario.BulletBill.prototype.Move = function() {

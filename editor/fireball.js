@@ -3,31 +3,34 @@
 	Code by Rob Kleffner, 2011
 */
 
-Mario.Fireball = function(world, x, y, facing) {
+Mario.Fireball = function(world, x, y, facing, setting) {
 	this.GroundInertia = 0.89;
 	this.AirInertia = 0.89;
 	
-	this.Image = Enjine.Resources.Images["particles"];
+	this.Image = Enjine.Resources.Images[setting.img];
 	
 	this.World = world;
 	this.X = x;
 	this.Y = y;
 	this.Facing = facing;
+
+	this.Style = setting.style;
+	this.Status = "run";
+	this.StyleIndex = 0;
 	
 	this.XPicO = 4;
 	this.YPicO = 4;
-	this.YPic = 3;
-	this.XPic = 4;
+	this.YPic = 0;
+	this.XPic = 0;
 	this.Height = 8;
 	this.Width = 4;
-	this.PicWidth = this.PicHeight = 8;
+	this.PicWidth = 16;
+	this.PicHeight = 28;
 	this.Ya = 4;
 	this.Dead = false;
 	this.DeadTime = 0;
 	this.Anim = 0;
 	this.OnGround = false;
-    this.UnitHeight = this.PicWidth;
-    this.UnitWidth = this.PicHeight;
 };
 
 Mario.Fireball.prototype = new Mario.NotchSprite();
@@ -60,7 +63,7 @@ Mario.Fireball.prototype.Move = function() {
 	
 	this.FlipX = this.Facing === -1;
 	
-	this.XPic = this.Anim % 4;
+	//this.YPic = this.Anim % 4;
 	
 	if (!this.SubMove(this.Xa, 0)) {
 		this.Die();
@@ -82,6 +85,19 @@ Mario.Fireball.prototype.Move = function() {
 	if (!this.OnGround) {
 		this.Ya -= 1.5;
 	}
+
+	this.CallPic();
+};
+
+Mario.Fireball.prototype.CallPic = function(){
+	// body... 
+	var status = this.Style[this.Status].split(",");
+	if(this.StyleIndex >= status.length) {
+		this.StyleIndex = 0;
+	} else {
+		this.StyleIndex ++;
+	}
+	this.YPic = status[this.StyleIndex];
 };
 
 
