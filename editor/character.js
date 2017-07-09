@@ -289,32 +289,7 @@ Mario.Character.prototype.Move = function() {
     
     if (Enjine.KeyboardInput.IsKeyDown(Enjine.Keys.A) && this.CanShoot && this.Fire && this.World.FireballsOnScreen < 2) {
         Enjine.Resources.PlaySound("fireball");
-        var setting = {
-            name: "axe",
-            typename: "weapon",
-            draw: {
-                img: "npc-171",
-                xpic0: 4,
-                ypic0: 4,
-                picwidth: 16,
-                picheight: 28,
-            },
-            body: {
-                width: 4,
-                height: 4,
-            },
-            speed: {
-                sky: 1.5,
-            },
-            signal: {
-                ground: "Reverse",
-                wall: "Die"
-            },
-            style: {
-                run: "0,1,2,3"
-            }
-        }
-        this.World.AddSprite(new Mario.Thing(this.World, this.X + this.Facing * 6, this.Y + 20, this.Facing, setting));
+        this.World.AddSprite(new Mario.Thing(this.World, this.X + this.Facing * 6, this.Y + 20, this.Facing, "axe"));
     }
     
     this.CanShoot = !Enjine.KeyboardInput.IsKeyDown(Enjine.Keys.A);

@@ -31,7 +31,7 @@ Editor.LevelState.prototype.Enter = function() {
     this.TileMapRenderer = new Mario.TileMapRenderer(this.TileMap, 320, 240);
     this.Sprites = new Enjine.DrawableManager();
     //this.AddSprite(new Mario.Enemy(this,100,80,0,0,false));
-    this.AddSprite(new Mario.Enemy(this, 100, 100, 0, 0, false));
+    this.AddSprite(new Mario.Thing(this, 100, 100, 0, 0, "koopa"));
     //this.AddSprite(new Mario.Enemy(this,100,120,0,0,false));
     //this.AddSprite(new Mario.Enemy(this,100,150,0,0,false));
     this.ShellsToCheck = [];
@@ -181,41 +181,44 @@ Editor.LevelState.prototype.UpdateGame = function(delta) {
 
         //显示动画，物理碰撞的关键，调用notchsprite定义的move
         for (i = 0; i < this.Sprites.Objects.length; i++) {
-            this.Sprites.Objects[i].Update(delta);
+                this.Sprites.Objects[i].Update(delta);
         }
 
-        //依次遍历每一个精灵与猪脚的碰撞效果
+        // //依次遍历每一个精灵与猪脚的碰撞效果
         for (i = 0; i < this.Sprites.Objects.length; i++) {
-            this.Sprites.Objects[i].CollideCheck();
-        }
-
-        //依次遍历每一个乌龟是否落到每一个精灵身上
-        for (i = 0; i < this.ShellsToCheck.length; i++) {
-            for (j = 0; j < this.Sprites.Objects.length; j++) {
-                if (this.Sprites.Objects[j] !== this.ShellsToCheck[i] && !this.ShellsToCheck[i].Dead) {
-                    if (this.Sprites.Objects[j].ShellCollideCheck(this.ShellsToCheck[i])) {
-                        if (Mario.MarioCharacter.Carried === this.ShellsToCheck[i] && !this.ShellsToCheck[i].Dead) {
-                            Mario.MarioCharacter.Carried = null;
-                            this.ShellsToCheck[i].Die();
-                        }
-                    }
-                }
-            }
-        }
-        this.ShellsToCheck.length = 0;
-
-        //依次遍历每一个子弹是否落到每一个精灵身上
-        for (i = 0; i < this.FireballsToCheck.length; i++) {
-            for (j = 0; j < this.Sprites.Objects.length; j++) {
-                if (this.Sprites.Objects[j] !== this.FireballsToCheck[i] && !this.FireballsToCheck[i].Dead) {
-                    if (this.Sprites.Objects[j].FireballCollideCheck(this.FireballsToCheck[i])) {
-                        this.FireballsToCheck[i].Die();
-                    }
-                }
+            if (!this.Sprites.Objects[i].hasOwnProperty("typeName")) {
+                this.Sprites.Objects[i].CollideCheck();
             }
         }
 
-        this.FireballsToCheck.length = 0;
+        // //依次遍历每一个乌龟是否落到每一个精灵身上
+        // for (i = 0; i < this.ShellsToCheck.length; i++) {
+        //     for (j = 0; j < this.Sprites.Objects.length; j++) {
+        //         if (this.Sprites.Objects[j] !== this.ShellsToCheck[i] && !this.ShellsToCheck[i].Dead) {
+        //             if (this.Sprites.Objects[j].ShellCollideCheck(this.ShellsToCheck[i])) {
+        //                 if (Mario.MarioCharacter.Carried === this.ShellsToCheck[i] && !this.ShellsToCheck[i].Dead) {
+        //                     Mario.MarioCharacter.Carried = null;
+        //                     this.ShellsToCheck[i].Die();
+        //                 }
+        //             }
+        //         }
+        //     }
+        // }
+        // this.ShellsToCheck.length = 0;
+
+        // //依次遍历每一个子弹是否落到每一个精灵身上
+        // for (i = 0; i < this.FireballsToCheck.length; i++) {
+        //     for (j = 0; j < this.Sprites.Objects.length; j++) {
+        //         if (this.Sprites.Objects[j] !== this.FireballsToCheck[i] && !this.FireballsToCheck[i].Dead) {
+        //             if (this.Sprites.Objects[j].FireballCollideCheck(this.FireballsToCheck[i])) {
+        //                 this.FireballsToCheck[i].Die();
+        //             }
+        //         }
+        //     }
+        // }
+
+        // this.FireballsToCheck.length = 0;
+        this.CollideCheck();
     }
 
     this.Sprites.AddRange(this.SpritesToAdd);
@@ -293,7 +296,7 @@ Editor.LevelState.prototype.AddSprite = function(sprite) {
 // };
 
 // var define = {
-    
+
 //     "enemy": {
 //         character
 
@@ -307,21 +310,22 @@ Editor.LevelState.prototype.AddSprite = function(sprite) {
 
 // }
 
-// Editor.LevelState.prototype.RemoveSprite = function(sprite) {
-//     this.Sprites.forEach(function(thingOne, indexOne, arr) {
-//         var compareStart = index + 1;
-//         if (compareStart < arr.length) {
-//             arr.slice(compareStart).forEach(function(thingTwo, indexTwo) {
-//                 if(thingOne.CollideCheck(thingTwo)) {
-//                     thingOne.CallFunc("head Enemy ", setting.thingClass, )
-//                     //thingOne::On
-//                     type = "";
-//                     thingOne.colide.calldepth("colidehead")
-//                 }
-//             });
-//         }
-//     })
-// };
+Editor.LevelState.prototype.CollideCheck = function() {
+    var world = this;
+    this.Sprites.Objects.forEach(function(thingOne, indexOne) {
+        var compareStart = indexOne + 1;
+        if (compareStart < world.Sprites.Objects.length) {
+            world.Sprites.Objects.slice(compareStart).forEach(function(thingTwo, indexTwo) {
+                if(thingOne.hasOwnProperty("typeName")) {
+                    if (thingOne.CollideCheck(thingTwo)) {
+                        thingOne.Trigger("collide", thingTwo);
+                       // thingTwo.Trigger("collide", thingOne);
+                    }
+                }
+            });
+        }
+    })
+};
 
 Editor.LevelState.prototype.RemoveSprite = function(sprite) {
     this.Sprites.Remove(sprite);
