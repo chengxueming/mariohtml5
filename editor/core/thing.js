@@ -34,7 +34,7 @@
 // }
 Mario.Thing = function(world, x, y, facing, setting) {
 
-    if(typeof setting == String) {
+    if(typeof setting == "string") {
         setting = window.library.thing[setting];
     }
 
@@ -89,9 +89,9 @@ Mario.Thing.prototype.Move = function() {
         return;
     }
 
-    if (this.Facing != 0) {
-        this.Anim++;
-    }
+    //if (this.Facing != 0) {
+    this.Anim++;
+    //}
 
     if (this.Xa > 2) {
         this.Facing = 1;
@@ -100,7 +100,7 @@ Mario.Thing.prototype.Move = function() {
         this.Facing = -1;
     }
 
-    this.Xa = this.Facing * sideWaysSpeed;
+    //this.Xa = this.Facing * sideWaysSpeed;
 
     //this.World.CheckThingCollide(this);
 
@@ -154,15 +154,29 @@ Mario.Thing.prototype.CallUserFunc = function(funcName, args) {
     return false;
 }
 
+//run:[[[0,1], [0,2], [0,3]], [[1,1], [1,2], [1,3]], freq]
+//
 Mario.Thing.prototype.CallPic = function() {
     // body... 
-    var status = this.Style[this.Status].split(",");
-    if (this.StyleIndex >= status.length) {
+
+    var dat = this.Style[this.Status];
+    var freq = 1;
+    var status = [];
+ 
+    var index = this.Facing > 0?1:0;
+    status = dat[index];
+    freq = dat[dat.length - 1];
+
+    if(this.Anim % freq) {
+        return ;
+    }
+    if (this.StyleIndex >= status.length - 1) {
         this.StyleIndex = 0;
     } else {
         this.StyleIndex++;
     }
-    this.YPic = status[this.StyleIndex];
+    this.XPic = status[this.StyleIndex][0];
+    this.YPic = status[this.StyleIndex][1];
 };
 
 
