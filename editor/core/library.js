@@ -12,244 +12,144 @@
 
 //           |--|
 //            width
-
+//var gnamespace = window;
 (function(global) {
     global.library = global.library || {};
     global.library.thing = {
         characters: {
             axe: {
-                name: "axe",
-                typename: "weapon",
-                draw: {
-                    img: "npc-171",
-                    row: 1,
-                    column: 4,
-                    // xpic0: 4,
-                    // ypic0: 4,
-                    // picwidth: 16,
-                    // picheight: 28,
-                },
-                // body: {
-                //     width: 4,
-                //     height: 4,
-                // },
-                speed: {
-                    sky: 1.5,
-                },
-                signal: {
-                    ground: "Reverse",
-                    wall: "Die"
-                },
+                draw: "npc-171",
                 style: {
                     run: "0,1,2,3"
                 }
             },
             mario: {
-                name: "mario",
-                typename: "character",
-                draw: {
-                    img: "mario-1",
-                    indextype: 1,
-                    xpic0: 8,
-                    ypic0: 1,
-                    picwidth: 32,
-                    picheight: 32,
+                small: {
+                    draw: {
+                        img: "mario-1",
+                        indextype: 1,
+                    },
+                    style: {
+                        face: function(pos){return [9 - pos[0], 8-pos[1]]},
+                        run: ["0,1;5", "face", 5],
+                    }
                 },
-                body: {
-                    width: 4,
-                    height: 15,
-                },
-                speed: {
-                    sky: 1.5,
-                },
-                signal: {
-                    ground: "Reverse",
-                    wall: "Die"
-                },
-                style: {
-                    face: function(pos){return [9 - pos[0], 8-pos[1]]},
-                    run: ["0,1;5", "face", 5],
-                    
+                big: {
+                    normal:function() {
+                        var me = cloneObj(this.characters.mario.small);
+                        me.draw.img = "mario-2";
+                        return me;
+                    },
+                    yellow:function() {
+                        var me = cloneObj(this.characters.mario.big.normal);
+                        me.draw.img = "mario-3";
+                        return me;
+                    }
                 }
             },
             koopa: {
-                name: "koopa",
-                typename: "character",
                 draw: {
                     img: "npc-2",
-                    xpic0: 8,
-                    ypic0: 1,
-                    picwidth: 32,
-                    picheight: 32,
-                },
-                body: {
-                    width: 4,
-                    height: 12,
-                },
-                speed: {
-                    sky: 1.5,
-                },
-                signal: {
-                    //ground: "Reverse",
-                    wall: "Die"
+                    column: 2,
                 },
                 style: {
                     run: ["0,1", 5]
                 }
             },
             tortoise: {
-                name: "tortoise",
-                typename: "character",
-                draw: {
-                    img: "npc-6",
-                    xpic0: 8,
-                    ypic0: 1,
-                    picwidth: 32,
-                    picheight: 54,
-                },
-                body: {
-                    width: 4,
-                    height: 24,
-                },
-                speed: {
-                    sky: 1.5,
-                },
-                signal: {
-                    //ground: "Reverse",
-                    wall: "Die"
-                },
+                draw: "npc-6",
                 style: {
                     run: ["0;0,1", "0;2,3", 5]
                 }
             },
-            flowerenemy: {
-                name: "koopa",
-                typename: "character",
-                draw: {
-                    img: "npc-171",
-                    xpic0: 4,
-                    ypic0: 4,
-                    picwidth: 16,
-                    picheight: 28,
-                },
-                body: {
-                    width: 4,
-                    height: 4,
-                },
-                speed: {
-                    sky: 1.5,
-                },
-                signal: {
-                    ground: "Reverse",
-                    wall: "Die"
-                },
-                style: {
-                    run: "0;0,1,2,3"
-                }
-            },
-            fireflower: {
-                name: "koopa",
-                typename: "character",
-                draw: {
-                    img: "npc-171",
-                    xpic0: 4,
-                    ypic0: 4,
-                    picwidth: 16,
-                    picheight: 28,
-                },
-                body: {
-                    width: 4,
-                    height: 4,
-                },
-                speed: {
-                    sky: 1.5,
-                },
-                signal: {
-                    ground: "Reverse",
-                    wall: "Die"
-                },
-                style: {
-                    run: "0;0,1,2,3"
-                }
-            },
             mushroom: {
-                name: "mushroom",
-                typename: "character",
                 draw: {
                     img: "npc-171",
-                    // xpic0: 4,
-                    // ypic0: 4,
-                    // picwidth: 16,
-                    // picheight: 28,
-                },
-                // body: {
-                //     width: 4,
-                //     height: 4,
-                // },
-                speed: {
-                    sky: 1.5,
-                },
-                signal: {
-                    ground: "Reverse",
-                    wall: "Die"
+                    column: 1,
                 },
                 style: {
-                    run: "0;0,1,2,3"
+                    run: ["0;0",5]
                 }
             },
+            fireflower: function() {
+                        var me = cloneObj(this.characters.mushroom);
+                        me.draw.img = "npc-14";
+                        return me;
+                    },
             shell: {
-                name: "shell",
-                typename: "character",
-                draw: {
-                    img: "npc-171",
-                    // xpic0: 4,
-                    // ypic0: 4,
-                    // picwidth: 16,
-                    // picheight: 28,
-                },
-                // body: {
-                //     width: 4,
-                //     height: 4,
-                // },
-                speed: {
-                    sky: 1.5,
-                },
-                signal: {
-                    ground: "Reverse",
-                    wall: "Die"
-                },
+                draw: "npc-5",
                 style: {
                     run: "0;0,1,2,3"
                 }
             },
         },//end characters
     }
-    libraryParse(global.library.thing.characters);
-})(window)
+    //libraryParse(global.library.thing.characters);
+})(global);//测试时为node 全局对象global 使用时为dom全局对象 window
+var two = require("../toned");
+var toned = two.TonedJS(false);
+toned.giveSup(toned, global);
+global.window = {};
+libraryParse(global.library.thing);
+mlog(library.thing.characters.fireflower);
+//TEST
+// sublibraryParse(global.library.thing.characters.mushroom);
+// mlog(global.library.thing.characters.mushroom);
+// mlog(global.library.thing.characters.mushroom.style.run);
 
 /**
 @param things is a thing map;
 */
 function libraryParse(things) {
-    for(i in things) {
-        var sprite = things[i];
-        parseImage(sprite);
-        parseStyle(sprite);
-    }
-    return things;
+    //递归的将所有函数转换为对象
+    this.endTag = "draw";
+    this.predealthings = function(things){
+        // body... 
+        for(i in things) {
+            switch (things[i].constructor) {
+                case Function:
+                    things[i] = things[i].call(library.thing);
+                    break;
+                case Object:
+                    if(!things[i].hasOwnProperty(this.endTag)) {
+                        predealthings(things[i]);
+                    }
+            }
+        };
+    };
+    this.sublibraryParse = function(things) {
+        this.sub = function (sprite) {
+            parseImage(sprite);
+            parseStyle(sprite);
+        };
+        for(i in things) {
+            switch (things[i].constructor) {
+                case Object:
+                    if(things[i].hasOwnProperty(this.endTag)) {
+                        //默认包含draw的为根节点
+                        var sprite = things[i];
+                        this.sub(sprite);
+                    } else {
+                        sublibraryParse(things[i])
+                    }
+                    break;
+            }
+        }
+        return things;
+    };
+    this.predealthings(things);
+    this.sublibraryParse(things);
 }
 
 function parseImage(sprite) {
     this.unitscale = 2;
     switch (sprite.draw.constructor) {
         case String:
-
-            break;
+            sprite.draw = {img: sprite.draw};
         case Object:
-            var img = Enjine.Resources.Images[sprite.draw.img];
-            var row = sprite.draw.row || 1;
-            var column = sprite.draw.column || 4;
-            sprite.draw.indextype = sprite.darw.indextype || 0;
+            //var img = Enjine.Resources.Images[sprite.draw.img];
+            var img = {width: 32, height: 32};
+            sprite.draw.indextype = sprite.draw.indextype || 0;
             if(sprite.draw.indextype) {
             //对于mario等
                 row = row || 10;
@@ -260,8 +160,12 @@ function parseImage(sprite) {
                 sprite.draw.picheight = sprite.draw.picheight || 32;
             }else {
             //对于全部npc 和 effect
+                var row = sprite.draw.row || 1;
+                var column = sprite.draw.column || 4;
                 sprite.draw.picwidth = sprite.draw.picwidth || img.width / row;
                 sprite.draw.picheight = sprite.draw.picheight || img.height / column;
+                sprite.draw.unitwidth = sprite.draw.unitwidth || sprite.draw.picwidth;
+                sprite.draw.unitheight = sprite.draw.unitheight || sprite.draw.picwidth;
             }
             //普遍为精灵的一半
             sprite.draw.xpic0 = sprite.draw.xpic0 || sprite.draw.picwidth/this.unitscale/2;
@@ -274,6 +178,9 @@ function parseImage(sprite) {
             sprite.body.height = sprite.body.height || (sprite.draw.picheight/this.unitscale - 4);
             break;
     }
+    delete sprite.draw.row;
+    delete sprite.draw.column;
+    delete sprite.draw.indextype;
 }
 /**
 style: {

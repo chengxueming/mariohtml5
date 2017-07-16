@@ -162,7 +162,7 @@ Mario.Character.prototype.Blink = function(on) {
         this.Image = Enjine.Resources.Images["mario-1"];
         this.XPicO = 8;
         this.YPicO = 1;
-        this.PicWidth = 32
+        this.PicWidth = 32;
         this.PicHeight = 32;
     }
 };
